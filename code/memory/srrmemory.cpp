@@ -1648,6 +1648,7 @@ void HeapManager::DumpArtStats ()
     const float HS_SPECIAL = 10.0f;
     #endif
 
+    // Look AT these later - Bruce
 #elif defined (RAD_WIN32) // these have not been optimized yet.
     #ifdef RAD_RELEASE
     const float HS_DEFAULT = 0.1f;  // For only very core FTech stuff
