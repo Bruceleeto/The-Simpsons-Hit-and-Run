@@ -1,7 +1,6 @@
 //=============================================================================
-// Copyright (c) 2002 Radical Games Ltd.  All rights reserved.
+// Copyright (c) 2002 Radical Games Ltd.  
 //=============================================================================
-
 
 //=============================================================================
 //
@@ -9,13 +8,14 @@
 //
 // Subsystem:	Foundation Technologies - Dispatcher
 //
-// Description:	This file the actual class definition used to implement the
-//              interface defined by the dispather.
+// Description:	This file is the actual class definition used to implement the
+//              interface defined by the dispatcher.
 //
 //				For complete description of Manager, refer to the Foundation
 //              Technologies technical reference manual.
 //
 // Revisions:   Mar 12, 2001     Creation
+//              Sep 11, 2025     Modernized to std::mutex
 //
 //=============================================================================
 
@@ -26,16 +26,11 @@
 // Include Files
 //=============================================================================
 
-#include <SDL.h>
-
+#include <mutex>
 
 #include <raddispatch.hpp>
 #include <radobject.hpp>
 #include <radmemory.hpp>
-
-//=============================================================================
-// Forward Class Declarations
-//=============================================================================
 
 //=============================================================================
 // Class Declarations
@@ -47,10 +42,10 @@
 class radDispatcher : public IRadDispatcher,
                       public radObject
 {
-    public:
+public:
 
     //
-    // Constructor. Pass allocator and max event to queue. Nothing to interesting.
+    // Constructor. Pass allocator and max event to queue.
     //
     radDispatcher( unsigned int maxCallbacks, radMemoryAllocator alloc );
     virtual ~radDispatcher( void );   // Only virtual to prevent warning
@@ -61,30 +56,27 @@ class radDispatcher : public IRadDispatcher,
     virtual unsigned int Service( void ); 
 
     //
-    // Use this member of queue a dispatch callback for deffered exectuion.
+    // Use this member to queue a dispatch callback for deferred execution.
     //
     virtual void QueueCallback( IRadDispatchCallback* pDispatchCallback, void* userData );
 
     //
-    // This member also queues an event. However, it supports queing from
-    // an interrupt context. It will not modify the state of the interrupt mask. Need due
-    // to limitations of some OSs.
+    // This member also queues an event. However, it supports queuing from
+    // an interrupt context. It will not modify the state of the interrupt mask. 
     //
     virtual void QueueCallbackFromInterrupt( IRadDispatchCallback* pDispatchCallback, void* userData );
 
     //
-    // Used to reference counting.
+    // Used for reference counting.
     //
     virtual void AddRef( void ); 
     virtual void Release( void );
     
-    #ifdef RAD_DEBUG
-
+#ifdef RAD_DEBUG
     virtual void Dump( char * pStringBuffer, unsigned int bufferSize );
-    
-    #endif
+#endif
 
-    private:
+private:
     
     //
     // Reference count.
@@ -92,10 +84,9 @@ class radDispatcher : public IRadDispatcher,
     unsigned int        m_ReferenceCount;
 
     //
-    // This data structure is used to manage a circular queue of dispatch objects.
-    // Event objects are added to the added to the head and removed from the tail.
+    // Circular queue of dispatch objects.
     //
-    struct  Event
+    struct Event
     {
         IRadDispatchCallback* m_Callback;
         void*                 m_UserData;
@@ -107,7 +98,7 @@ class radDispatcher : public IRadDispatcher,
     unsigned int        m_EventQueueTailIndex;
     unsigned int        m_EventsQueued;
 
-    SDL_mutex*		m_Mutex;
+    std::mutex          m_Mutex;   // Modern replacement for SDL_mutex
 };
 
 #endif
