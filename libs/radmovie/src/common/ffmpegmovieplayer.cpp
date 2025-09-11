@@ -178,7 +178,7 @@ bool radMoviePlayer::Render( void )
 //=============================================================================
 // radMoviePlayer::Load
 //=============================================================================
-
+/*  
 void radMoviePlayer::Load( const char * pVideoFileName, unsigned int audioTrackIndex )
 {   
     rAssert( m_State == IRadMoviePlayer2::NoData );
@@ -276,11 +276,23 @@ void radMoviePlayer::Load( const char * pVideoFileName, unsigned int audioTrackI
 
     Service( );
 }
+*/
 
+
+void radMoviePlayer::Load( const char * pVideoFileName, unsigned int audioTrackIndex )
+{ 
+}
 //=============================================================================
 // radMoviePlayer::Unload
 //=============================================================================
 
+
+void radMoviePlayer::Unload( void )
+{
+    SetState( IRadMoviePlayer2::NoData );
+}
+
+/*  
 void radMoviePlayer::Unload( void )
 {
     if( m_State != IRadMoviePlayer2::NoData )
@@ -309,7 +321,7 @@ void radMoviePlayer::Unload( void )
         SetState( IRadMoviePlayer2::NoData );
     }
 }
-
+*/
 //=============================================================================
 // radMoviePlayer::Play
 //=============================================================================

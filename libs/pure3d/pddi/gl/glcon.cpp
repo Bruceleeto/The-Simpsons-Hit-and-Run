@@ -899,7 +899,7 @@ void pglContext::SetAmbientLight(pddiColour col)
     pddiBaseContext::SetAmbientLight(col);
     float ambient[4];
     FillGLColour(col,ambient);
-    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
+   // glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
 }
 
 

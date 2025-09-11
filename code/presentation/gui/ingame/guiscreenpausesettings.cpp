@@ -112,93 +112,12 @@ CGuiScreenPauseSettings::CGuiScreenPauseSettings
     m_pMenu( NULL ),
     m_currentCameraSelectionMode( CAMERA_SELECTION_NOT_AVAILABLE )
 {
-MEMTRACK_PUSH_GROUP( "CGuiScreenPauseSettings" );
-    // Retrieve the Scrooby drawing elements.
-    //
-    Scrooby::Page* pPage = m_pScroobyScreen->GetPage( "PauseSettings" );
-	rAssert( pPage );
-
-    // Create a menu.
-    //
-    m_pMenu = new CGuiMenu( this, NUM_PAUSE_SETTINGS_MENU_ITEMS, GUI_TEXT_MENU, MENU_SFX_NONE );
-    rAssert( m_pMenu != NULL );
-    
-    // Add menu items
-    //
-    char itemName[ 32 ];
-
-    for( int i = 0; i < NUM_PAUSE_SETTINGS_MENU_ITEMS; i++ )
-    {
-        Scrooby::Group* group = pPage->GetGroup( PAUSE_SETTINGS_MENU_ITEMS[ i ] );
-        rAssert( group != NULL );
-
-        Scrooby::Text* pText = group->GetText( PAUSE_SETTINGS_MENU_ITEMS[ i ] );
-        rAssert( pText != NULL );
-        pText->SetTextMode( Scrooby::TEXT_WRAP );
-
-        sprintf( itemName, "%s_Value", PAUSE_SETTINGS_MENU_ITEMS[ i ] );
-        Scrooby::Text* pTextValue = group->GetText( itemName );
-        rAssert( pTextValue != NULL );
-        pTextValue->SetTextMode( Scrooby::TEXT_WRAP );
-
-        sprintf( itemName, "%s_LArrow", PAUSE_SETTINGS_MENU_ITEMS[ i ] );
-        Scrooby::Sprite* pLArrow = group->GetSprite( itemName );
-
-        sprintf( itemName, "%s_RArrow", PAUSE_SETTINGS_MENU_ITEMS[ i ] );
-        Scrooby::Sprite* pRArrow = group->GetSprite( itemName );
-
-        m_pMenu->AddMenuItem( pText,
-                              pTextValue,
-                              NULL,
-                              NULL,
-                              pLArrow,
-                              pRArrow,
-                              SELECTION_ENABLED | VALUES_WRAPPED | TEXT_OUTLINE_ENABLED );
-    }
-
-#ifdef RAD_GAMECUBE
-    // change "Vibration" text to "Rumble"
-    //
-    Scrooby::Text* vibrationText = dynamic_cast<Scrooby::Text*>( m_pMenu->GetMenuItem( MENU_ITEM_VIBRATION )->GetItem() );
-    rAssert( vibrationText != NULL );
-    vibrationText->SetIndex( 1 );
-#endif // RAD_GAMECUBE
 
     for( int j = 0; j < NUM_CAMERA_SELECTION_MODES; j++ )
     {
         m_cameraSelections[ j ] = NULL;
         m_numCameraSelections[ j ] = 0;
     }
-
-    m_cameraSelections[ CAMERA_SELECTION_FOR_DRIVING ] = CAMERAS_FOR_DRIVING;
-#ifdef RAD_PC
-    m_cameraSelections[ CAMERA_SELECTION_FOR_WALKING ] = PC_CAMERAS_FOR_WALKING;
-#else
-    m_cameraSelections[ CAMERA_SELECTION_FOR_WALKING ] = CAMERAS_FOR_WALKING;
-#endif
-
-    if( GetCheatInputSystem()->IsCheatEnabled( CHEAT_ID_UNLOCK_CAMERAS ) )
-    {
-        m_numCameraSelections[ CAMERA_SELECTION_FOR_DRIVING ] = NUM_CAMERAS_FOR_DRIVING;
-
-#ifdef RAD_PC
-        m_numCameraSelections[ CAMERA_SELECTION_FOR_WALKING ] = NUM_PC_CAMERAS_FOR_WALKING;
-#else
-        m_numCameraSelections[ CAMERA_SELECTION_FOR_WALKING ] = NUM_CAMERAS_FOR_WALKING;
-#endif
-    }
-    else
-    {
-        m_numCameraSelections[ CAMERA_SELECTION_FOR_DRIVING ] = NUM_CAMERAS_FOR_DRIVING_WITHOUT_CHEAT;
-#ifdef RAD_PC
-        m_numCameraSelections[ CAMERA_SELECTION_FOR_WALKING ] = NUM_PC_CAMERAS_FOR_WALKING_WITHOUT_CHEAT;
-#else
-        m_numCameraSelections[ CAMERA_SELECTION_FOR_WALKING ] = NUM_CAMERAS_FOR_WALKING_WITHOUT_CHEAT;
-#endif
-    }
-
-    GetCheatInputSystem()->RegisterCallback( this );
-MEMTRACK_POP_GROUP("CGuiScreenPauseSettings");
 }
 
 
@@ -216,14 +135,9 @@ MEMTRACK_POP_GROUP("CGuiScreenPauseSettings");
 //===========================================================================
 CGuiScreenPauseSettings::~CGuiScreenPauseSettings()
 {
-    GetCheatInputSystem()->UnregisterCallback( this );
-
-    if( m_pMenu != NULL )
-    {
-        delete m_pMenu;
-        m_pMenu = NULL;
-    }
+ 
 }
+
 
 
 //===========================================================================
