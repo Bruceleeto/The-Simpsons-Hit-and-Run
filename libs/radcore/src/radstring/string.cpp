@@ -20,7 +20,7 @@
 //============================================================================
 
 #include "pch.hpp"
-#include <SDL.h>
+#include "rad_strutils.hpp"
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -413,7 +413,7 @@ class radString
                 str++;
             }
             #else
-                SDL_strlwr( m_pBuffer );
+                strlwr( m_pBuffer );
             #endif
         }
     }
@@ -433,7 +433,7 @@ class radString
                 str++;
             }
             #else
-                SDL_strupr( m_pBuffer );
+                strupr( m_pBuffer );
             #endif
         }
     }

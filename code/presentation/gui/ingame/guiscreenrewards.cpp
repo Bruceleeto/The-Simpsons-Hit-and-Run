@@ -15,7 +15,7 @@
 //===========================================================================
 // Includes
 //===========================================================================
-#include <SDL.h>
+#include "rad_strutils.hpp"
 
 #include <presentation/gui/ingame/guiscreenrewards.h>
 #include <presentation/gui/guimenu.h>
@@ -476,10 +476,10 @@ IGuiScreenRewards::InsertPreviewObject( PreviewObject* previewObjects,
                 char string2[ 64 ];
 
                 strcpy( stringID, pReward->GetName() );
-                p3d::UnicodeToAscii( GetTextBibleString( SDL_strupr( stringID ) ), string1, sizeof( string1 ) );
+                p3d::UnicodeToAscii( GetTextBibleString( strupr( stringID ) ), string1, sizeof( string1 ) );
 
                 strcpy( stringID, previewObjects[ i ].name );
-                p3d::UnicodeToAscii( GetTextBibleString( SDL_strupr( stringID ) ), string2, sizeof( string2 ) );
+                p3d::UnicodeToAscii( GetTextBibleString( strupr( stringID ) ), string2, sizeof( string2 ) );
 
                 insertHere = ( strcmp( string1, string2 ) < 0 );
             }
@@ -669,7 +669,7 @@ IGuiScreenRewards::On3DModelSelectionChange( const PreviewObject* nextModel )
 
         char textBibleEntry[ sizeof( nextModel->name ) ];
         strcpy( textBibleEntry, nextModel->name );
-        UnicodeChar* textBibleString = GetTextBibleString( SDL_strupr( textBibleEntry ) );
+        UnicodeChar* textBibleString = GetTextBibleString( strupr( textBibleEntry ) );
         UnicodeString unicodeString;
         if( textBibleString != NULL )
         {

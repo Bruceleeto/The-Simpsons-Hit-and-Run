@@ -32,7 +32,7 @@
 //=============================================================================
 // Include Files
 //=============================================================================
-
+#include "rad_strutils.hpp"
 #include <radobject.hpp>
 #include <radmemory.hpp>
 #include <radthread.hpp>

@@ -1069,7 +1069,7 @@ CGuiScreenPhoneBooth::HandleMessageForCar( eGuiMessage message,
                     {
                         char textBibleEntry[ 16 ];
                         strcpy( textBibleEntry, OVERRIDE_VEHICLE_NAMES[ s_currentDebugVehicleSelection ] );
-                        UnicodeChar* textBibleString = GetTextBibleString( SDL_strupr( textBibleEntry ) );
+                        UnicodeChar* textBibleString = GetTextBibleString( strupr( textBibleEntry ) );
                         UnicodeString unicodeString;
                         if( textBibleString != NULL )
                         {
