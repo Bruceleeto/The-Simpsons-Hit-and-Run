@@ -95,7 +95,7 @@ extern "C" int main( int argc, char *argv[] )
     //
     SDL_Init( SDL_INIT_EVENTS | SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER );
 	
-    SDL_LogSetOutputFunction( LogOutputFunction, NULL );
+//    SDL_LogSetOutputFunction( LogOutputFunction, NULL );
 
     //
     // Have to get FTech setup first so that we can use all the memory services.
