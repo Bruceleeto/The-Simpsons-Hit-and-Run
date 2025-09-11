@@ -447,6 +447,12 @@ unsigned int radMoviePlayer::GetCurrentFrameNumber( void )
 
 void radMoviePlayer::Service( void )
 {
+
+    
+}
+/*  
+void radMoviePlayer::Service( void )
+{
     //
     // Start off by letting the decoder figure out where it is
     //
@@ -611,6 +617,7 @@ void radMoviePlayer::Service( void )
     }
 }
 
+*/
 //=============================================================================
 // radMoviePlayer::SetState
 //=============================================================================

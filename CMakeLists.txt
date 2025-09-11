@@ -85,19 +85,7 @@ if(SRR2_REROUTE_ALL_HEAP_ALLOCATIONS)
 	add_compile_definitions(REROUTE_ALL_HEAP_ALLOCATIONS)
 endif()
 
-option(SRR2_USE_BINK OFF)
-if(SRR2_USE_BINK)
-	add_compile_definitions(RAD_MOVIEPLAYER_USE_BINK)
-else()
-	find_package(PkgConfig REQUIRED)
-	pkg_check_modules(FFmpeg REQUIRED IMPORTED_TARGET
-			libavformat
-			libavcodec
-			libavutil
-			libswresample
-			libswscale
-	)
-endif()
+ 
 
 set(SRR2_P3D_PDDI "OpenGL" CACHE STRING "Pure3D PDDI implementation")
 set_property(CACHE SRR2_P3D_PDDI PROPERTY STRINGS "OpenGL" "GLES1" "GLES2")
@@ -1269,11 +1257,7 @@ target_link_libraries(radmovie
 	radcore
 	radsound
 )
-if(SRR2_USE_BINK)
-	target_link_libraries(radmovie bink)
-else()
-	target_link_libraries(radmovie PkgConfig::FFmpeg)
-endif()
+ 
 if(SRR2_BUILD_TESTS)
 	add_executable(simplemovie "libs/radmovie/sample/src/main.cpp" "libs/radmovie/sample/src/util.cpp"
 		"code/main/tuidunaligned.cpp")
@@ -1284,8 +1268,7 @@ if(SRR2_BUILD_TESTS)
 		pddi
 		radcore
 		radsound
-		PkgConfig::FFmpeg
-	)
+ 	)
 	if(VITA)
 		if(SRR2_USE_VITAGL)
 			target_link_libraries(simplemovie
@@ -1450,11 +1433,7 @@ if(VITA)
 		SceKernelDmacMgr_stub
 	)
 endif()
-if(SRR2_USE_BINK)
-	target_link_libraries(SRR2 bink)
-else()
-	target_link_libraries(SRR2 PkgConfig::FFmpeg)
-endif()
+ 
 target_compile_features(SRR2 PRIVATE cxx_std_17)
 
 option(SRR2_USE_PCH ON)
