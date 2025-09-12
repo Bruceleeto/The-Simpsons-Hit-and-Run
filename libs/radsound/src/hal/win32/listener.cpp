@@ -22,7 +22,6 @@
 #include "pch.hpp"
 #include "listener.hpp"
 #include "system.hpp"
-#include <efx.h>
 
 //============================================================================
 // Static definitions

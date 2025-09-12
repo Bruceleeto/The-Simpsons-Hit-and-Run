@@ -26,7 +26,6 @@
 #include "radsoundwin.hpp"
 #include "positionalgroup.hpp"
 #include "../common/rolloff.hpp"
-#include <efx.h>
 
 //============================================================================
 // Component: radSoundHalListener

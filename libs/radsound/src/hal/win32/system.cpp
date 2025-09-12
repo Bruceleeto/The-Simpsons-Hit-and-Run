@@ -10,7 +10,6 @@
 #include "../common/banner.hpp"
 #include "../common/memoryregion.hpp"
 #include <radplatform.hpp>
-#include <efx.h>
 #include "radinprogext.h"
 
 LPALBUFFERSTORAGESOFT radBufferStorageSOFT;

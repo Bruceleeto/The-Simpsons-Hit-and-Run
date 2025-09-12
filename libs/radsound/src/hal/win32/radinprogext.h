@@ -1,4 +1,4 @@
-#include <al.h>
+#include <AL/al.h>
 
 #define AL_MAP_READ_BIT_SOFT                     0x00000001
 #define AL_MAP_WRITE_BIT_SOFT                    0x00000002

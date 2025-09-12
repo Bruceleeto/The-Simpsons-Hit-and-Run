@@ -6,7 +6,7 @@
 #ifndef RADSOUNDWIN_HPP
 #define RADSOUNDWIN_HPP
 
-#include <al.h>
+#include <AL/al.h>
 
 //============================================================================
 // Helper Functions
