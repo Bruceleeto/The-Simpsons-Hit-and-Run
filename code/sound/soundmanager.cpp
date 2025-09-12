@@ -111,6 +111,9 @@ SoundManager* SoundManager::CreateInstance( bool muteSound, bool noMusic,
     
     rAssert( spInstance == NULL );
 
+  
+         muteSound = true;    
+ 
     spInstance = new(GMA_PERSISTENT) SoundManager( muteSound, noMusic, noEffects, noDialogue );
     rAssert( spInstance );
 
@@ -118,7 +121,6 @@ SoundManager* SoundManager::CreateInstance( bool muteSound, bool noMusic,
 
     return spInstance;
 }
-
 //==============================================================================
 // SoundManager::GetInstance
 //==============================================================================
@@ -1522,8 +1524,12 @@ void SoundManager::RestartSupersprintMusic()
 //=============================================================================
 float SoundManager::GetBeatValue()
 {
+    if( m_isMuted )  
+    {
+        return 0.0f;
+    }
+    
     rAssert( m_musicPlayer != NULL );
-
     return( m_musicPlayer->GetBeatValue() );
 }
 
