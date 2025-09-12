@@ -1045,6 +1045,7 @@ struct IRadDriveCompletionCallback : public IRefCount
     virtual void OnDriveOperationsComplete( void* pUserData ) = 0;    
 };
 
+
 //
 // Interface for callbacks used to notify the user when an error has occurred on a drive.
 // Returning true will retry the request, and false will fail the request.

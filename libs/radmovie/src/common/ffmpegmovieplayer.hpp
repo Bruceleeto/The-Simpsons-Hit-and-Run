@@ -27,12 +27,10 @@
 
 #ifndef RAD_MOVIEPLAYER_USE_BINK
 
-#include <al.h>
-#include <radtime.hpp>
+ #include <radtime.hpp>
 #include <radmovie2.hpp>
 #include <radlinkedclass.hpp>
-#include <radsound.hpp>
-#include <radstring.hpp>
+ #include <radstring.hpp>
 #include "radmovieinterfaces.hpp"
 
 //=============================================================================
@@ -46,6 +44,9 @@ struct SwsContext;
 struct SwrContext;
 struct AVFrame;
 struct AVPacket;
+typedef unsigned int ALuint;
+
+
 
 //=============================================================================
 // Type Definitions

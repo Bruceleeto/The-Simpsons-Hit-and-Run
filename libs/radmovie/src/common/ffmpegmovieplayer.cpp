@@ -28,7 +28,7 @@
 #include <radmath/radmath.hpp>
 #include "radmoviefile.hpp"
 #include "ffmpegmovieplayer.hpp"
-#include "audiodatasource.hpp"
+// REMOVED: #include "audiodatasource.hpp"
 
 #include <vector>
 
@@ -39,6 +39,17 @@ extern "C"
     #include <libswscale/swscale.h>
     #include <libswresample/swresample.h>
 }
+
+typedef int ALint;
+typedef unsigned int ALuint;
+#define AL_SOURCE_STATE 0x1010
+#define AL_PLAYING 0x1012
+#define AL_BUFFERS_PROCESSED 0x1016
+
+inline void alGetSourcei(ALuint source, int param, ALint *value) { *value = AL_PLAYING; }
+inline void alSourcePlay(ALuint source) {}
+inline void alSourceUnqueueBuffers(ALuint source, ALint nb, ALuint *buffers) {}
+inline void alDeleteBuffers(ALint n, const ALuint *buffers) {}
 
 //=============================================================================
 // Constants
@@ -102,8 +113,8 @@ radMoviePlayer::radMoviePlayer( void )
     m_pSwrCtx( NULL ),
     m_pPacket( NULL ),
     m_pVideoFrame( NULL ),
-    m_pAudioFrame( NULL ),
-    m_AudioSource( 0 )
+    m_pAudioFrame( NULL )
+    // REMOVED: m_AudioSource( 0 )
 {
     radTimeCreateStopwatch( &m_refIRadStopwatch, radTimeUnit_Millisecond, GetThisAllocator( ) );
 }
@@ -153,10 +164,11 @@ bool radMoviePlayer::Render( void )
     {
         bool ret = m_refIRadMovieRenderStrategy->Render( );
 
-        ALint state;
-        alGetSourcei( m_AudioSource, AL_SOURCE_STATE, &state );
-        if( state != AL_PLAYING )  // have we fallen behind, if so reset
-            alSourcePlay( m_AudioSource );
+        // Audio stub - pretend audio is always playing
+        // ALint state;
+        // alGetSourcei( m_AudioSource, AL_SOURCE_STATE, &state );
+        // if( state != AL_PLAYING )
+        //     alSourcePlay( m_AudioSource );
 
         FlushAudioQueue();
 
@@ -178,150 +190,23 @@ bool radMoviePlayer::Render( void )
 //=============================================================================
 // radMoviePlayer::Load
 //=============================================================================
-/*  
-void radMoviePlayer::Load( const char * pVideoFileName, unsigned int audioTrackIndex )
-{   
-    rAssert( m_State == IRadMoviePlayer2::NoData );
-    rAssert( pVideoFileName != NULL );
-
-    rDebugPrintf( "radMoviePlayer: Loading %s\n", pVideoFileName );
-
-    m_refIRadStopwatch->Stop( );
-    m_refIRadStopwatch->Reset( );
-
-    //
-    // Reset the variables
-    //
-
-    m_VideoFrameState = VideoFrame_Unlocked;
-
-    SetState( IRadMoviePlayer2::Loading );
-
-    m_pFormatCtx = avformat_alloc_context();
-    AV_CHK( avformat_open_input( &m_pFormatCtx, pVideoFileName, NULL, NULL ) );
-    AV_CHK( avformat_find_stream_info( m_pFormatCtx, NULL ) );
-
-    const AVCodec* pVideoCodec = NULL;
-    m_VideoTrackIndex = av_find_best_stream( m_pFormatCtx, AVMEDIA_TYPE_VIDEO, -1, -1, &pVideoCodec, 0 );
-    AVCodecParameters* pVideoParams = m_pFormatCtx->streams[m_VideoTrackIndex]->codecpar;
-    m_pVideoCtx = avcodec_alloc_context3( pVideoCodec );
-    AV_CHK( avcodec_parameters_to_context( m_pVideoCtx, pVideoParams ) );
-    AV_CHK( avcodec_open2( m_pVideoCtx, pVideoCodec, NULL ) );
-
-#ifndef RAD_VITAGL
-    m_pSwsCtx = sws_getContext(
-        pVideoParams->width,
-        pVideoParams->height,
-        AV_PIX_FMT_YUV420P,
-        pVideoParams->width,
-        pVideoParams->height,
-        AV_PIX_FMT_BGRA,
-        0, NULL, NULL, NULL
-    );
-#endif
-
-    if( audioTrackIndex != radMovie_NoAudioTrack )
-    {
-        const AVCodec* pAudioCodec = NULL;
-        m_AudioTrackIndex = av_find_best_stream( m_pFormatCtx, AVMEDIA_TYPE_AUDIO, audioTrackIndex + 1, -1, &pAudioCodec, 0 );
-        AVCodecParameters* pAudioParams = m_pFormatCtx->streams[m_AudioTrackIndex]->codecpar;
-        m_pAudioCtx = avcodec_alloc_context3( pAudioCodec );
-        AV_CHK( avcodec_parameters_to_context( m_pAudioCtx, pAudioParams ) );
-        AV_CHK( avcodec_open2( m_pAudioCtx, pAudioCodec, NULL ) );
-
-        AVChannelLayout layout = { AV_CHANNEL_ORDER_NATIVE, 2, AV_CH_LAYOUT_STEREO };
-        AV_CHK( swr_alloc_set_opts2( &m_pSwrCtx,
-            &layout,
-            AV_SAMPLE_FMT_S16,
-            pAudioParams->sample_rate,
-            &pAudioParams->ch_layout,
-            (AVSampleFormat)pAudioParams->format,
-            pAudioParams->sample_rate,
-            0,
-            NULL ) );
-        swr_init( m_pSwrCtx );
-    }
-    else
-    {
-        m_AudioTrackIndex = 0;
-    }
-
-    m_pPacket = av_packet_alloc();
-    m_pVideoFrame = av_frame_alloc();
-    m_pAudioFrame = av_frame_alloc();
-
-    alGenSources( 1, &m_AudioSource );
-    alSourcei( m_AudioSource, AL_SOURCE_RELATIVE, AL_TRUE );
-
-    //
-    // Initialize the render strategy & and pass the file to
-    // the decoder to deal with
-    //
-
-    m_refIRadMovieRenderStrategy->ChangeParameters( pVideoParams->width, pVideoParams->height );
-
-    //
-    // Print out some helpful information
-    //
-    rDebugPrintf( "\nradMoviePlayer: Summary\n" \
-                  "     * Resolution         [%dx%d]\n" \
-                  "     * Format             [%d]\n" \
-                  "     * Audio Track        [%d]\n\n",
-        pVideoParams->width, pVideoParams->height,
-        pVideoParams->format, m_AudioTrackIndex );
-
-    // The buffered data source's input must be set before the stream player's
-
-    SetState( IRadMoviePlayer2::ReadyToPlay );
-
-    Service( );
-}
-*/
-
 
 void radMoviePlayer::Load( const char * pVideoFileName, unsigned int audioTrackIndex )
-{ 
+{
+    // TODO: Implement actual loading without audio
+    // For now, just set state to indicate no data
+    SetState( IRadMoviePlayer2::NoData );
 }
+
 //=============================================================================
 // radMoviePlayer::Unload
 //=============================================================================
-
 
 void radMoviePlayer::Unload( void )
 {
     SetState( IRadMoviePlayer2::NoData );
 }
 
-/*  
-void radMoviePlayer::Unload( void )
-{
-    if( m_State != IRadMoviePlayer2::NoData )
-    {
-        alSourceStop( m_AudioSource );
-        FlushAudioQueue();
-        alDeleteSources( 1, &m_AudioSource );
-
-#ifndef RAD_VITAGL
-        sws_freeContext( m_pSwsCtx );
-#endif
-        swr_free( &m_pSwrCtx );
-        av_packet_free( &m_pPacket );
-        av_frame_free( &m_pVideoFrame );
-        av_frame_free( &m_pAudioFrame );
-        avcodec_free_context( &m_pVideoCtx );
-        avcodec_free_context( &m_pAudioCtx );
-        avformat_close_input( &m_pFormatCtx );
-        avformat_free_context( m_pFormatCtx );
-
-        m_refIRadStopwatch->Stop( );
-        m_refIRadStopwatch->Reset( );
-
-        m_VideoFrameState = VideoFrame_Unlocked;
-
-        SetState( IRadMoviePlayer2::NoData );
-    }
-}
-*/
 //=============================================================================
 // radMoviePlayer::Play
 //=============================================================================
@@ -362,7 +247,7 @@ void radMoviePlayer::Pause( void )
 
 void radMoviePlayer::SetPan( float pan )
 {
-    // Not supported
+    // Not supported - audio removed
 }
 
 //=============================================================================
@@ -380,7 +265,7 @@ float radMoviePlayer::GetPan( void )
 
 void radMoviePlayer::SetVolume( float volume )
 {
-    // Not supported
+    // Not supported - audio removed
 }
 
 //=============================================================================
@@ -447,177 +332,9 @@ unsigned int radMoviePlayer::GetCurrentFrameNumber( void )
 
 void radMoviePlayer::Service( void )
 {
-
-    
-}
-/*  
-void radMoviePlayer::Service( void )
-{
-    //
-    // Start off by letting the decoder figure out where it is
-    //
-
-    //
-    // Now figure out where we are.
-    //
-
-
-
-    if( m_State == IRadMoviePlayer2::NoData )
-    {
-        // Nothing to do
-    }
-    else if( m_State == IRadMoviePlayer2::Playing )
-    {
-        //
-        // If the video frame is unlocked, we can issue the next decode request.
-        //
-
-        if( m_VideoFrameState == VideoFrame_Unlocked )
-        {
-            //
-            // Keep an eye on the states of things to detect the end of the movie
-            //
-
-            if( av_read_frame( m_pFormatCtx, m_pPacket ) >= 0 )
-            {
-                if( m_pPacket->stream_index == m_VideoTrackIndex )
-                {
-                    AV_CHK( avcodec_send_packet( m_pVideoCtx, m_pPacket ) );
-
-                    //
-                    // Decompress all pending video frames
-                    //
-
-                    while( avcodec_receive_frame( m_pVideoCtx, m_pVideoFrame ) >= 0 )
-                    {
-                        // Reset the list of render destinations
-
-                        m_refIRadMovieRenderStrategy->ResetDestinations();
-
-                        // Now go through the list destinations until we've filled 
-                        // them all up with the freshly decoded data
-
-                        IRadMovieRenderStrategy::LockedDestination dest;
-
-                        while( m_refIRadMovieRenderStrategy->LockNextDestination( &dest ) > 0 )
-                        {
-                            uint8_t* pDest = (uint8_t*)dest.m_pDest;
-
-#ifdef RAD_VITAGL
-                            memcpy( pDest, m_pVideoFrame->data[0], m_pVideoFrame->linesize[0] * m_pVideoFrame->height );
-                            pDest += m_pVideoFrame->linesize[0] * m_pVideoFrame->height;
-                            memcpy( pDest, m_pVideoFrame->data[1], m_pVideoFrame->linesize[1] * m_pVideoFrame->height / 2 );
-                            pDest += m_pVideoFrame->linesize[1] * m_pVideoFrame->height / 2;
-                            memcpy( pDest, m_pVideoFrame->data[2], m_pVideoFrame->linesize[2] * m_pVideoFrame->height / 2 );
-#else
-
-                            // If one of these copies fail, we'll have to skip this frame
-                            // and not iterate the loop
-                            if( sws_scale( m_pSwsCtx,
-                                m_pVideoFrame->data, m_pVideoFrame->linesize,
-                                dest.m_SrcPosY, m_pVideoFrame->height - dest.m_SrcPosY,
-                                &pDest, &dest.m_DestPitch ) >= 0 )
-#endif
-                            {
-                                AVRational rational = m_pFormatCtx->streams[0]->time_base;
-                                m_PresentationTime = (m_pVideoFrame->pts * rational.num * 1000) / rational.den;
-                                m_PresentationDuration = (m_pVideoFrame->duration * rational.num * 1000) / rational.den;
-                                m_VideoFrameState = VideoFrame_Locked;
-                            }
-
-                            m_refIRadMovieRenderStrategy->UnlockDestination();
-                        }
-                    }
-                }
-                else if( m_AudioTrackIndex > 0 && m_pPacket->stream_index == m_AudioTrackIndex )
-                {
-                    AV_CHK( avcodec_send_packet( m_pAudioCtx, m_pPacket ) );
-
-                    //
-                    // Decompress all pending audio frames
-                    //
-
-                    while( avcodec_receive_frame( m_pAudioCtx, m_pAudioFrame ) >= 0 )
-                    {
-                        uint8_t* output;
-                        int outSamples = swr_get_out_samples( m_pSwrCtx, m_pAudioFrame->nb_samples );
-                        av_samples_alloc( &output, NULL, 2, outSamples,
-                                     AV_SAMPLE_FMT_S16, 0 );
-                        outSamples = swr_convert( m_pSwrCtx, &output, outSamples,
-                                                  (const uint8_t**)m_pAudioFrame->data, m_pAudioFrame->nb_samples );
-                        int bufferSize = av_samples_get_buffer_size( NULL, 2,
-                                outSamples, AV_SAMPLE_FMT_S16, 0 );
-
-                        // TODO: Add buffer queuing support to radsound and move this code to that module.
-                        ALuint buffer;
-                        alGenBuffers( 1, &buffer );
-                        alBufferData( buffer, AL_FORMAT_STEREO16, output, bufferSize, m_pAudioFrame->sample_rate );
-                        alSourceQueueBuffers( m_AudioSource, 1, &buffer );
-                        av_freep( &output );
-                    }
-                }
-
-                av_packet_unref( m_pPacket );
-            }
-            else
-            {
-                rDebugChannelPrintf( radMovieDebugChannel2, "radMoviePlayer: Out of data at [%lld]\n", m_pVideoFrame->pts );
-
-                // We've hit the end of the movie.  Unload!
-
-                Unload( );
-                return;
-            }
-        }
-
-        if( m_VideoFrameState == VideoFrame_Locked )
-        {
-            //
-            // We will render the frame at the appropriate time.  We know that the 
-            // image will be presented on a vsync.  As long as the time between now
-            // and the presentation time is less than a vsync period, we can begin
-            // rendering
-            //
-
-            if( m_refIRadMovieRenderLoop != NULL )
-            {
-                // If the client gave us a render loop, initiate a render of the new frame.
-                // It's okay for us to fall a little behind the presentation time.  We might
-                // catch up without dropping frames.  If we do fall far enough behind, throw
-                // away frames until we're all the way caught up
-
-                unsigned int currentTime = m_refIRadStopwatch->GetElapsedTime();
-                
-                if( currentTime > m_PresentationTime &&
-                    currentTime <= m_PresentationTime + m_PresentationDuration + RAD_MOVIE_PLAYER_VIDEO_LAG )
-                {
-                    m_refIRadMovieRenderLoop->IterateLoop( this );
-                }
-                else if( currentTime > m_PresentationTime + m_PresentationDuration )
-                {
-                    rTunePrintf( "radMoviePlayer: NOT RENDERING THIS FRAME (must catch up)\n" );
-                    rTunePrintf( "current time[ %d ] expected presentation time[ %d ~ %d ]\n",
-                        currentTime, m_PresentationTime, m_PresentationTime + m_PresentationDuration );
-
-                    ALint state;
-                    alGetSourcei( m_AudioSource, AL_SOURCE_STATE, &state );
-                    if( state != AL_STOPPED )  // allow audio to re-sync
-                        alSourceStop( m_AudioSource );
-
-                    //
-                    // Not rendering will save us up to a vsync period this round.
-                    // Eventually we're bound to catch up
-                    //
-
-                    m_VideoFrameState = VideoFrame_Unlocked;
-                }
-            }
-        }
-    }
+    // TODO: Implement service logic without audio
 }
 
-*/
 //=============================================================================
 // radMoviePlayer::SetState
 //=============================================================================
@@ -647,15 +364,8 @@ void radMoviePlayer::InternalPlay( void )
 
 void radMoviePlayer::FlushAudioQueue( void )
 {
-    // Flush the queue, deleting processed buffers
-    ALint processed = 0;
-    alGetSourcei( m_AudioSource, AL_BUFFERS_PROCESSED, &processed );
-    if( processed > 0 )
-    {
-        std::vector<ALuint> buffers( processed );
-        alSourceUnqueueBuffers( m_AudioSource, processed, buffers.data() );
-        alDeleteBuffers( processed, buffers.data() );
-    }
+    // Audio removed - this is now a no-op stub
+    // Originally flushed OpenAL audio buffers
 }
 
 //=============================================================================

@@ -5,20 +5,6 @@ project(SRR2)
 set(SRR2_TITLE "Simpsons Hit & Run")
 set(SRR2_VERSION "00.61")
 
-if(VITA)
-	include("${VITASDK}/share/vita.cmake" REQUIRED)
-
-	add_compile_definitions(RAD_VITA)
-	## Configuration options for this app
-	# Display name (under bubble in LiveArea)
-	set(VITA_APP_NAME ${SRR2_TITLE})
-	# Unique ID must be exactly 9 characters. Recommended: XXXXYYYYY where X =
-	# unique string of developer and Y = a unique number for this app
-	set(VITA_TITLEID  "ROADRAGE2")
-	# Optional version string to show in LiveArea's more info screen
-	set(VITA_VERSION ${SRR2_VERSION})
-endif()
-
 find_program(CCACHE_FOUND ccache)
 if(CCACHE_FOUND)
     set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
@@ -46,12 +32,6 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 		add_compile_options(
 			-Werror
 			-ggdb
-		)
-	endif()
-	if(VITA)
-		add_compile_options(
-			-mtune=cortex-a9
-			-mfpu=neon
 		)
 	endif()
 endif()
@@ -85,30 +65,16 @@ if(SRR2_REROUTE_ALL_HEAP_ALLOCATIONS)
 	add_compile_definitions(REROUTE_ALL_HEAP_ALLOCATIONS)
 endif()
 
- 
-
 set(SRR2_P3D_PDDI "OpenGL" CACHE STRING "Pure3D PDDI implementation")
-set_property(CACHE SRR2_P3D_PDDI PROPERTY STRINGS "OpenGL" "GLES1" "GLES2")
+set_property(CACHE SRR2_P3D_PDDI PROPERTY STRINGS "OpenGL" "GLES1")
 if(SRR2_P3D_PDDI STREQUAL "GLES1")
 	add_compile_definitions(RAD_GLES)
 	add_compile_definitions(RAD_GLES_VERSION=1)
-endif()
-if(SRR2_P3D_PDDI STREQUAL "GLES2")
-	add_compile_definitions(RAD_GLES)
-	add_compile_definitions(RAD_GLES_VERSION=2)
-endif()
-if(VITA)
-	option(SRR2_USE_VITAGL ON)
-	if(SRR2_USE_VITAGL)
-		add_compile_definitions(RAD_VITAGL)
-	endif()
 endif()
 
 if(WIN32)
 	add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
 endif()
-
-option(SRR2_BUILD_TESTS ON)
 
 set(SRR2_SOURCES
 	"code/ai/actionbuttonhandler.cpp"
@@ -1099,34 +1065,7 @@ if(SRR2_USE_BINK)
 		list(APPEND BINK_SOURCES "libs/sdks/bink/x86_cpu.c")
 	endif ()
 
-	if (WIN32)
-		list(APPEND BINK_SOURCES
-			"libs/sdks/bink/binkplugin.c"
-			"libs/sdks/bink/binkpluginw32.c"
-			"libs/sdks/bink/binkxa2.cpp"
-			"libs/sdks/bink/win32_radmem.c"
-			"libs/sdks/bink/win32_rrAtomics.cpp"
-			"libs/sdks/bink/win32_rrCpu.c"
-			"libs/sdks/bink/win32_rrThreads2.c"
-			"libs/sdks/bink/wintimer.c"
-		)
-		#if(CMAKE_SYSTEM_PROCESSOR STREQUAL x86_64)
-		#	list(APPEND BINK_SOURCES "libs/sdks/bink/win64_rrAtomics_x64.asm")
-		#endif()
-	else()
-		list(APPEND BINK_SOURCES
-			"libs/sdks/bink/binklnx.c"
-			#"libs/sdks/bink/binkpa.c"
-			#"libs/sdks/bink/binkplugin.c"
-			#"libs/sdks/bink/binkpluginlnx.c"
-			"libs/sdks/bink/binkssmix.c"
-			"libs/sdks/bink/posix_defread.c"
-			"libs/sdks/bink/posix_radmem.c"
-			"libs/sdks/bink/posix_rrCpu.c"
-			"libs/sdks/bink/posix_rrThreads2.c"
-			"libs/sdks/bink/cpp_rratomics.cpp"
-		)
-	endif()
+ 
 endif()
 
 set(PDDI_SOURCES
@@ -1135,40 +1074,16 @@ set(PDDI_SOURCES
 	"libs/pure3d/pddi/base/font.cpp"
 	"libs/pure3d/pddi/base/pddiobj.cpp"
 )
-if(SRR2_P3D_PDDI STREQUAL "GLES2")
-	list(APPEND PDDI_SOURCES
-		"libs/pure3d/pddi/gles/glcon.cpp"
-		"libs/pure3d/pddi/gles/gldev.cpp"
-		"libs/pure3d/pddi/gles/glmat.cpp"
-		"libs/pure3d/pddi/gles/gltex.cpp"
-		"libs/pure3d/pddi/gles/glprog.cpp"
-		"libs/pure3d/pddi/gles/glad/src/glad.c"
-	)
-	if(SRR2_USE_VITAGL)
-		list(APPEND PDDI_SOURCES "libs/pure3d/pddi/gles/display_vita/gldisplay.cpp")
-	else()
-		list(APPEND PDDI_SOURCES
-			"libs/pure3d/pddi/gles/decompress.cpp"
-			"libs/pure3d/pddi/gles/display_win32/gldisplay.cpp"
-		)
-	endif()
-else()
-	list(APPEND PDDI_SOURCES
-		"libs/pure3d/pddi/gl/glcon.cpp"
-		"libs/pure3d/pddi/gl/gldev.cpp"
-		"libs/pure3d/pddi/gl/glmat.cpp"
-		"libs/pure3d/pddi/gl/gltex.cpp"
-		"libs/pure3d/pddi/gl/glad/src/glad.c"
-	)
-	if(SRR2_P3D_PDDI STREQUAL "GLES1")
-		list(APPEND PDDI_SOURCES "libs/pure3d/pddi/gl/decompress.cpp")
-	endif()
-	if(VITA)
-		list(APPEND PDDI_SOURCES "libs/pure3d/pddi/gl/display_vita/gldisplay.cpp")
-	else()
-		list(APPEND PDDI_SOURCES "libs/pure3d/pddi/gl/display_win32/gldisplay.cpp")
-	endif()
-endif()
+list(APPEND PDDI_SOURCES
+	"libs/pure3d/pddi/gl/glcon.cpp"
+	"libs/pure3d/pddi/gl/gldev.cpp"
+	"libs/pure3d/pddi/gl/glmat.cpp"
+	"libs/pure3d/pddi/gl/gltex.cpp"
+	"libs/pure3d/pddi/gl/glad/src/glad.c"
+	"libs/pure3d/pddi/gl/decompress.cpp"
+	"libs/pure3d/pddi/gl/display_win32/gldisplay.cpp"
+)
+
 
 add_library(radcore STATIC ${RADCORE_SOURCES})
 target_include_directories(radcore
@@ -1255,48 +1170,9 @@ target_include_directories(radmovie
 target_link_libraries(radmovie
 	p3d
 	radcore
-	radsound
-)
+ )
  
-if(SRR2_BUILD_TESTS)
-	add_executable(simplemovie "libs/radmovie/sample/src/main.cpp" "libs/radmovie/sample/src/util.cpp"
-		"code/main/tuidunaligned.cpp")
-	target_link_libraries(simplemovie
-		radmovie
-		SDL2::SDL2
-		p3d
-		pddi
-		radcore
-		radsound
- 	)
-	if(VITA)
-		if(SRR2_USE_VITAGL)
-			target_link_libraries(simplemovie
-				vitaGL
-				vitashark
-			)
-		endif()
-		target_link_libraries(simplemovie
-			SceLibKernel_stub
-			ScePvf_stub
-			mathneon
-			SceAudio_stub
-			SceAppMgr_stub
-			SceAppUtil_stub
-			ScePgf_stub
-			SceShaccCgExt
-			SceShaccCg_stub
-			SceCtrl_stub
-			taihen_stub
-			SceKernelDmacMgr_stub
-		)
-	endif()
-	file(COPY "libs/radmovie/sample/bin/binkcd/sample_bink.rmv"
-        DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
-	if(VITA)
-		vita_create_self(simplemovie.self simplemovie)
-	endif()
-endif()
+
 
 add_library(radmusic STATIC ${RADMUSIC_SOURCES})
 target_include_directories(radmusic
@@ -1320,20 +1196,7 @@ target_link_libraries(radsound
 	${SRR2_OPENAL_TARGET}
 	radcore
 )
-if(SRR2_BUILD_TESTS)
-	add_executable(simplesound "libs/radsound/sample/simplesound/src/main.cpp")
-	target_link_libraries(simplesound
-		radsound
-		Threads::Threads
-	)
-	file(COPY "libs/radsound/sample/simplesound/bin/win/sample.rsd"
-        DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
-	file(COPY "libs/radsound/sample/simplesound/bin/win/stream.rsd"
-        DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
-	if(VITA)
-		vita_create_self(simplesound.self simplesound)
-	endif()
-endif()
+
 
 add_library(radscript STATIC ${RADSCRIPT_SOURCES})
 target_include_directories(radscript
@@ -1362,31 +1225,7 @@ target_link_libraries(sim
 	poser
 )
 
-if(SRR2_USE_BINK)
-	add_library(bink STATIC ${BINK_SOURCES})
-	target_compile_definitions(bink
-		PRIVATE
-			USING_EGT
-			INC_BINK2
-			NO_BINK20
-			NO_BINK10_SUPPORT
-		PUBLIC
-			__RADFINAL__
-			__RADINSTATICLIB__
-	)
-	target_link_libraries(bink ${SRR2_OPENAL_TARGET})
-	if (WIN32)
-		target_link_libraries(bink Winmm)
-	endif()
-	if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-		target_compile_options(bink
-			PRIVATE -Wno-multichar
-		)
-	endif()
-	target_include_directories(bink
-		PUBLIC "libs/sdks/bink/"
-	)
-endif()
+
 
 add_executable(${PROJECT_NAME} ${SRR2_SOURCES})
 target_link_libraries(${PROJECT_NAME}
@@ -1411,28 +1250,7 @@ if(SRR2_MICROPROFILE AND WIN32)
 	# needed for microprofile
 	target_link_libraries(SRR2 wsock32)
 endif()
-if(VITA)
-	if(SRR2_USE_VITAGL)
-		target_link_libraries(SRR2
-			vitaGL
-			vitashark
-		)
-	endif()
-	target_link_libraries(SRR2
-		SceLibKernel_stub
-		ScePvf_stub
-		mathneon
-		SceAudio_stub
-		SceAppMgr_stub
-		SceAppUtil_stub
-		ScePgf_stub
-		SceShaccCgExt
-		SceShaccCg_stub
-		SceCtrl_stub
-		taihen_stub
-		SceKernelDmacMgr_stub
-	)
-endif()
+
  
 target_compile_features(SRR2 PRIVATE cxx_std_17)
 
@@ -1443,42 +1261,6 @@ endif()
 
 target_include_directories(SRR2 PRIVATE "code/")
 
-if(VITA)
-	## Create Vita files
-	if(NOT SRR2_USE_VITAGL)
-		vita_create_self(${PROJECT_NAME}.self ${PROJECT_NAME} UNSAFE)
-		# The FILE directive lets you add additional files to the VPK, the syntax is
-		# FILE src_path dst_path_in_vpk. In this case, we add the LiveArea paths.
-		vita_create_vpk(${SRR2_FILENAME}${SRR2_REGION}.vpk ${VITA_TITLEID} ${PROJECT_NAME}.self
-			VERSION ${VITA_VERSION}
-			NAME ${VITA_APP_NAME}
-			FILE sce_sys/icon0.png sce_sys/icon0.png
-			sce_sys/livearea/contents/bg.png sce_sys/livearea/contents/bg.png
-			sce_sys/livearea/contents/startup.png sce_sys/livearea/contents/startup.png
-			sce_sys/livearea/contents/template.xml sce_sys/livearea/contents/template.xml
-			art art
-
-			#suprx
-			module/libGLESv2.suprx module/libGLESv2.suprx
-			module/libgpu_es4_ext.suprx module/libgpu_es4_ext.suprx
-			module/libIMGEGL.suprx module/libIMGEGL.suprx
-			module/libpvrPSP2_WSEGL.suprx module/libpvrPSP2_WSEGL.suprx
-		)
-	else()
-		vita_create_self(${PROJECT_NAME}.self ${PROJECT_NAME})
-		# The FILE directive lets you add additional files to the VPK, the syntax is
-		# FILE src_path dst_path_in_vpk. In this case, we add the LiveArea paths.
-		vita_create_vpk(${SRR2_FILENAME}${SRR2_REGION}.vpk ${VITA_TITLEID} ${PROJECT_NAME}.self
-			VERSION ${VITA_VERSION}
-			NAME ${VITA_APP_NAME}
-			FILE sce_sys/icon0.png sce_sys/icon0.png
-			sce_sys/livearea/contents/bg.png sce_sys/livearea/contents/bg.png
-			sce_sys/livearea/contents/startup.png sce_sys/livearea/contents/startup.png
-			sce_sys/livearea/contents/template.xml sce_sys/livearea/contents/template.xml
-			art art
-		)
-	endif()
-endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "NintendoSwitch")
 	nx_generate_nacp(OUTPUT ${PROJECT_NAME}.nacp

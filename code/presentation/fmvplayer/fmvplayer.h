@@ -18,6 +18,7 @@
 
 #include <presentation/animplayer.h>
 #include <radmovie2.hpp>
+#include <radfile.hpp> 
 
 //========================================
 // Forward References

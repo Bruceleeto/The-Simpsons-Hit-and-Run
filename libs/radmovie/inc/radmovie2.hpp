@@ -41,8 +41,7 @@
 #include <radoptions.hpp>
 #include <radobject.hpp>
 #include <radmemory.hpp>
-#include <radsound_hal.hpp>
-
+ 
 #if defined RAD_XBOX && ! defined RAD_MOVIEPLAYER_USE_BINK
 #include <d3d8.h>
 #endif // RAD_XBOX && ! RAD_MOVIEPLAYER_USE_BINK

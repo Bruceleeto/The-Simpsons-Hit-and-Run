@@ -28,9 +28,7 @@
 #ifndef RAD_MOVIEPLAYER_USE_BINK
 
 #include <radobject.hpp>
-#include <radsound_hal.hpp>
-#include <radsoundfile.hpp>
-#include <radfile.hpp>
+ #include <radfile.hpp>
 
 //=============================================================================
 // Forward Declarations
