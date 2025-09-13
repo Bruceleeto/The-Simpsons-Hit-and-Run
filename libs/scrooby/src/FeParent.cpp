@@ -254,8 +254,7 @@ FeEntity* FeParent::GetChild( const tUID hashvalue )
 FeEntity* FeParent::GetChildIndex( int i ) 
 {
     int childrenCount = GetChildrenCount();
-    rAssert( i < childrenCount );
-    
+     
     if( i >= childrenCount ) 
     {
         i = childrenCount - 1;
@@ -293,8 +292,7 @@ FeEntity* FeParent::GetChildIndex( int i )
 const FeEntity* FeParent::GetChildIndex( int i ) const
 {
     int childrenCount = GetChildrenCount();
-    rAssert( i < childrenCount );
-    
+     
     if( i >= childrenCount ) 
     {
         i = childrenCount - 1;

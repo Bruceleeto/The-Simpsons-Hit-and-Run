@@ -90,86 +90,27 @@ void radSoundHalSystem::Initialize( const SystemDescription & systemDescription 
         "ERROR radsound: system sampling rate must be set"
         "to the highest sampling rate required by your program (probably 48000Hz)" );
 
-    m_NumAuxSends = systemDescription.m_NumAuxSends;
+    m_NumAuxSends = 0;
+    m_pDevice = NULL;
+    m_pContext = NULL;
+    
+    printf("[Sound] OpenAL initialization stubbed out\n");
 
-    // Initialize OpenAL
+    // radSoundHalListener::Initialize(GetThisAllocator(), m_pContext);
+    printf("[Sound] Skipping listener initialization\n");
 
-    m_pDevice = alcOpenDevice(NULL);
-
-    ALenum err = alcGetError(m_pDevice);
-    rAssertMsg(err == AL_NO_ERROR, "OpenAL device couldn't be opened.");
-
-    if (err == AL_NO_ERROR)
-    {
-        //
-        // Setup the primary context.
-        //
-
-        ALCint attr[] = {
-            ALC_FREQUENCY, (ALCint)systemDescription.m_SamplingRate,
-            ALC_MAX_AUXILIARY_SENDS, m_NumAuxSends,
-            0
-        };
-        m_pContext = alcCreateContext(m_pDevice, attr);
-
-        ALenum err = alcGetError(m_pDevice);
-        rAssertMsg(err == AL_NO_ERROR, "OpenAL context couldn't be created.");
-
-        if (err == AL_NO_ERROR)
-        {
-            alcMakeContextCurrent(m_pContext);
-
-            rAssert( alIsExtensionPresent( "AL_SOFTX_map_buffer" ) );
-
-            radBufferStorageSOFT = (LPALBUFFERSTORAGESOFT)alGetProcAddress( "alBufferStorageSOFT" );
-            radMapBufferSOFT = (LPALMAPBUFFERSOFT)alGetProcAddress( "alMapBufferSOFT" );
-            radUnmapBufferSOFT = (LPALUNMAPBUFFERSOFT)alGetProcAddress( "alUnmapBufferSOFT" );
-
-            // enable debug messages, as of OpenAL-Soft v1.23.1 this extension has not been released yet
-            if (alIsExtensionPresent("AL_EXT_debug"))
-            {
-                auto const AL_DEBUG_OUTPUT_EXT = alGetEnumValue("AL_DEBUG_OUTPUT_EXT");
-                auto const alDebugMessageCallbackEXT = (LPALDEBUGMESSAGECALLBACKEXT)alGetProcAddress("alDebugMessageCallbackEXT");
-                alEnable(AL_DEBUG_OUTPUT_EXT);
-                alDebugMessageCallbackEXT(PrintOpenALErrors, /*userParam*/nullptr);
-            }
-
-            if (m_NumAuxSends > 0 && alcIsExtensionPresent(m_pDevice, "ALC_EXT_EFX"))
-            {
-                alGenAuxiliaryEffectSlots = (LPALGENAUXILIARYEFFECTSLOTS)alGetProcAddress("alGenAuxiliaryEffectSlots");
-                alDeleteAuxiliaryEffectSlots = (LPALDELETEAUXILIARYEFFECTSLOTS)alGetProcAddress("alDeleteAuxiliaryEffectSlots");
-                alAuxiliaryEffectSlotf = (LPALAUXILIARYEFFECTSLOTF)alGetProcAddress("alAuxiliaryEffectSlotf");
-                alGetAuxiliaryEffectSlotf = (LPALGETAUXILIARYEFFECTSLOTF)alGetProcAddress("alGetAuxiliaryEffectSlotf");
-
-                alcGetIntegerv(m_pDevice, ALC_MAX_AUXILIARY_SENDS, 1, &m_NumAuxSends);
-                alGenAuxiliaryEffectSlots(m_NumAuxSends, m_AuxSlots);
-            }
-            else
-            {
-                m_NumAuxSends = 0;
-            }
-        }
-    }
-
-    radSoundHalListener::Initialize
-	(
-		GetThisAllocator( ),
-        m_pContext
-	);
-
-    // Allocate memory
-
+    // Still allocate memory for sound system
     m_pSoundMemory = ::radMemoryAllocAligned( 
-        GetThisAllocator( ),
+        GetThisAllocator(),
         systemDescription.m_ReservedSoundMemory, 
-        radSoundHalDataSourceReadAlignmentGet( ) );
+        radSoundHalDataSourceReadAlignmentGet() );
 
     radSoundHalMemoryRegion::Initialize( 
         m_pSoundMemory, 
         systemDescription.m_ReservedSoundMemory, 
         systemDescription.m_MaxRootAllocations,
-        radSoundHalDataSourceReadAlignmentGet( ), 
-        radMemorySpace_Local, GetThisAllocator( ) );
+        radSoundHalDataSourceReadAlignmentGet(), 
+        radMemorySpace_Local, GetThisAllocator() );
 }
 
 //============================================================================
@@ -389,25 +330,19 @@ radSoundHalSystem * radSoundHalSystem::GetInstance( void )
 // ::rsdGetSystem
 //================================================================================
 
-IRadSoundHalSystem * radSoundHalSystemGet( void )
+IRadSoundHalSystem* radSoundHalSystemGet( void )
 {
-    rAssert( radSoundHalSystem::s_pRsdSystem != NULL );
-
-    return radSoundHalSystem::s_pRsdSystem;
+    return NULL;
 }
 
 //================================================================================
 // ::radSoundIntialize
 //================================================================================
 
-void radSoundHalSystemInitialize( radMemoryAllocator allocator  )
+void radSoundHalSystemInitialize( radMemoryAllocator allocator )
 {
-    rAssert( radSoundHalSystem::s_pRsdSystem == NULL );
-
-    new( "radSoundHalSystem", allocator ) radSoundHalSystem( allocator );
-    radSoundHalSystem::s_pRsdSystem->AddRef( );
+    return;
 }
-
 //================================================================================
 // ::radSoundIntialize
 //================================================================================

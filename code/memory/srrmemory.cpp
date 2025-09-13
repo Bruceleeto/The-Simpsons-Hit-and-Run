@@ -2061,23 +2061,7 @@ int HeapManager::GetHeapUsage (IRadMemoryAllocator* allocator)
 
 int HeapManager::GetSoundMemoryHeapUsage()
 {
-    int soundMemoryUsage = 0;
-
-    #ifdef RAD_PS2
-        unsigned int size;
-        unsigned int totalFree;
-        unsigned int largestBlock;
-        unsigned int numObjects;
-        IRadSoundHalMemoryRegion* soundMemory = ::radSoundHalSystemGet()->GetRootMemoryRegion();
-        rAssert( soundMemory != NULL );
-
-        size = soundMemory->GetSize();
-        soundMemory->GetStats( &totalFree, &numObjects, &largestBlock, true );
-
-        soundMemoryUsage = size - totalFree;
-    #endif
-
-    return( soundMemoryUsage );
+    return 0;
 }
 
 HeapManager* HeapMgr ()

@@ -60,25 +60,30 @@ radSoundHalBufferWin::radSoundHalBufferWin(	void )
 
 void radSoundHalBufferWin::Initialize
 (
-	IRadSoundHalAudioFormat * pIRadSoundHalAudioFormat,
+    IRadSoundHalAudioFormat * pIRadSoundHalAudioFormat,
     IRadMemoryObject * pIRadMemoryObject,
     unsigned int sizeInFrames,
-	bool looping,
+    bool looping,
     bool streaming
 )
 {
     rAssert( pIRadSoundHalAudioFormat != NULL );
     rAssert( pIRadSoundHalAudioFormat->GetEncoding() == IRadSoundHalAudioFormat::PCM );
-	rAssert( pIRadMemoryObject->GetMemorySize( ) >= ::radSoundHalBufferCalculateMemorySize( 
+    rAssert( pIRadMemoryObject->GetMemorySize( ) >= ::radSoundHalBufferCalculateMemorySize( 
         IRadSoundHalAudioFormat::Bytes, sizeInFrames, 
         IRadSoundHalAudioFormat::Frames, pIRadSoundHalAudioFormat ) );
 
     m_refIRadSoundHalAudioFormat = pIRadSoundHalAudioFormat;
-	m_refIRadMemoryObject = pIRadMemoryObject;
-	m_Looping = looping;
+    m_refIRadMemoryObject = pIRadMemoryObject;
+    m_Looping = looping;
     m_Streaming = streaming;
     m_SizeInFrames = sizeInFrames;
 
+    // Skip all OpenAL buffer creation
+    m_Buffer = 0;
+    
+    // Comment out all OpenAL calls
+    /*
     alGenBuffers( 1, &m_Buffer );
     rAssert( alGetError() == AL_NO_ERROR );
     if( streaming )
@@ -97,8 +102,8 @@ void radSoundHalBufferWin::Initialize
         );
         rAssert( alGetError() == AL_NO_ERROR );
     }
+    */
 }
-
 //========================================================================
 // radSoundHalBufferWin::GetMemoryObject
 //========================================================================
@@ -195,8 +200,7 @@ bool radSoundHalBufferWin::IsStreaming( void )
 
 ALuint radSoundHalBufferWin::GetBuffer( void )
 {
-    rAssert(m_Buffer != 0);
-    return m_Buffer;
+     return m_Buffer;
 }
 
 //========================================================================

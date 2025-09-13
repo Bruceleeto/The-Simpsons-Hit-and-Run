@@ -1963,7 +1963,7 @@ SoundManager::SoundManager( bool noSound, bool noMusic,
     m_soundFXPlayer( NULL ),
     m_NISPlayer( NULL ),
     m_movingSoundManager( NULL ),
-    m_isMuted( noSound ),
+    m_isMuted( true ), // FORCE MUTE
     m_noMusic( noMusic ),
     m_noEffects( noEffects ),
     m_noDialogue( noDialogue ),
@@ -1976,20 +1976,14 @@ SoundManager::SoundManager( bool noSound, bool noMusic,
 {
     m_dialogCoordinator = NULL;
     
-    Sound::daSoundRenderingManagerCreate( GMA_AUDIO_PERSISTENT );
-
-    if( !m_isMuted )
-    {
-        m_pSoundRenderMgr = Sound::daSoundRenderingManagerGet();
-        rAssert( m_pSoundRenderMgr != NULL );
-
-        m_pSoundRenderMgr->Initialize();
-    }
+    // Comment out sound system creation
+    // Sound::daSoundRenderingManagerCreate( GMA_AUDIO_PERSISTENT );
 
     GetGameDataManager()->RegisterGameData( this, sizeof( SoundSettings ), "Sound Manager" );
 
     prepareStartupSounds();
 }
+
 
 //==============================================================================
 // SoundManager::~SoundManager
@@ -2005,23 +1999,7 @@ SoundManager::SoundManager( bool noSound, bool noMusic,
 SoundManager::~SoundManager()
 {
     GetEventManager()->RemoveAll( this );
-
-    if( m_isMuted )
-    {
-        return;
-    }
-
-    delete( GMA_PERSISTENT, m_soundFXPlayer);
-    delete( GMA_PERSISTENT, m_movingSoundManager);
-    delete( GMA_PERSISTENT, m_NISPlayer);
-    delete( GMA_PERSISTENT, m_dialogCoordinator);
-    delete( GMA_PERSISTENT, m_musicPlayer);
-    delete( GMA_PERSISTENT, m_soundLoader);
-
-    Sound::daSoundRenderingManagerTerminate();
-
-    delete( GMA_PERSISTENT, m_debugDisplay);
-}
+ }
 
 //=============================================================================
 // SoundManager::Initialize
@@ -2112,53 +2090,6 @@ void SoundManager::Initialize()
 
 void SoundManager::prepareStartupSounds()
 {
-    //
-    // Go direct to RadSound to load two sounds that we can 
-    // play for bootcheck screens
-    //
-    IRadSoundRsdFileDataSource* selectFileDataSource =
-        radSoundRsdFileDataSourceCreate( GMA_DEFAULT );
-    selectFileDataSource->AddRef();
-    selectFileDataSource->InitializeFromFileName( "sound/accept.rsd",
-                                                  false,
-                                                  0,
-                                                  IRadSoundHalAudioFormat::Frames,
-                                                  Sound::SoundNucleusGetClipFileAudioFormat() );
-    m_selectSoundClip = radSoundClipCreate( GMA_DEFAULT );
-    m_selectSoundClip->AddRef();
-    m_selectSoundClip->Initialize(
-        selectFileDataSource,
-        ::radSoundHalSystemGet()->GetRootMemoryRegion(),
-        false,
-        "sound/accept.rsd" );
-    selectFileDataSource->Release( );
-
-    m_selectSoundClipPlayer = radSoundClipPlayerCreate( GMA_DEFAULT );
-    m_selectSoundClipPlayer->AddRef();
-
-    IRadSoundRsdFileDataSource* scrollFileDataSource =
-        radSoundRsdFileDataSourceCreate( GMA_DEFAULT );
-    scrollFileDataSource->AddRef();
-    scrollFileDataSource->InitializeFromFileName( "sound/scroll.rsd",
-                                                  false,
-                                                  0,
-                                                  IRadSoundHalAudioFormat::Frames,
-                                                  Sound::SoundNucleusGetClipFileAudioFormat() );
-    m_scrollSoundClip = radSoundClipCreate( GMA_DEFAULT );
-    m_scrollSoundClip->AddRef();
-    m_scrollSoundClip->Initialize(
-        scrollFileDataSource,
-        ::radSoundHalSystemGet()->GetRootMemoryRegion(),
-        false,
-        "sound/scroll.rsd" );
-    scrollFileDataSource->Release( );
-
-    m_scrollSoundClipPlayer = radSoundClipPlayerCreate( GMA_DEFAULT );
-    m_scrollSoundClipPlayer->AddRef();
-
-    //
-    // Starting listening for the select/scroll events
-    //
     GetEventManager()->AddListener( this, EVENT_FE_MENU_SELECT );
     GetEventManager()->AddListener( this, EVENT_FE_MENU_UPORDOWN );
 }
@@ -2183,18 +2114,10 @@ void SoundManager::dumpStartupSounds()
 
 void SoundManager::playStartupAcceptSound()
 {
-    if( m_selectSoundClip->GetState() == IRadSoundClip::Initialized )
-    {
-        m_selectSoundClipPlayer->SetClip( m_selectSoundClip );
-        m_selectSoundClipPlayer->Play();
-    }
+ 
 }
 
 void SoundManager::playStartupScrollSound()
 {
-    if( m_scrollSoundClip->GetState() == IRadSoundClip::Initialized )
-    {
-        m_scrollSoundClipPlayer->SetClip( m_scrollSoundClip );
-        m_scrollSoundClipPlayer->Play();
-    }
+ 
 }

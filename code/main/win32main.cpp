@@ -20,6 +20,7 @@
 // file reading before radtech
 #include <stdio.h>
 #include <SDL_main.h>
+#include <unistd.h>   
 
 #ifdef __SWITCH__
 #include <switch.h>
@@ -79,8 +80,16 @@ extern "C" int main( int argc, char *argv[] )
 #endif
     romfsInit();
 #endif
+
 #ifdef RAD_VITA
-	chdir( "ux0:data/simpsons" );
+    chdir( "ux0:data/simpsons" );
+#else
+    if (chdir("cd") != 0) {
+        printf("Failed to change to 'cd' directory\n");
+        perror("chdir");
+    } else {
+        printf("Successfully changed to 'cd' directory\n");
+    }
 #endif
 
     //
@@ -94,7 +103,7 @@ extern "C" int main( int argc, char *argv[] )
     // Initialize SDL subsystems
     //
     SDL_Init( SDL_INIT_EVENTS | SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER );
-	
+    
     SDL_LogSetOutputFunction( LogOutputFunction, NULL );
 
     //
@@ -109,7 +118,6 @@ extern "C" int main( int argc, char *argv[] )
     Win32Platform::InitializeFoundation();
 
     srand (Game::GetRandomSeed ());
-
 
     // Now disable the default heap
     //
@@ -138,7 +146,6 @@ extern "C" int main( int argc, char *argv[] )
     //
     Game* pGame = Game::CreateInstance( pPlatform );
     rAssert( pGame != NULL );
-
 
     //
     // Initialize the game.
@@ -197,7 +204,6 @@ extern "C" int main( int argc, char *argv[] )
     //
     return 0;
 }
-
 
 //=============================================================================
 // Function:    ProcessCommandLineArguments

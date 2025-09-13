@@ -11,6 +11,9 @@ if(CCACHE_FOUND)
 endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Dreamcast" OR DEFINED ENV{KOS_BASE})
+    set(CMAKE_CXX_STANDARD 17)
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
     set(SDL2_FOUND TRUE)
     set(SDL2_INCLUDE_DIRS "$ENV{KOS_BASE}/addons/include/dreamcast/SDL2")
     set(SDL2_LIBRARIES "-lSDL2 -lGL")
@@ -82,8 +85,8 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 	add_compile_options(-fvisibility=hidden)
 	if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 		add_compile_options(
-			-Werror
-			-ggdb
+ 			-ggdb
+			-g 
 		)
 	endif()
 endif()
