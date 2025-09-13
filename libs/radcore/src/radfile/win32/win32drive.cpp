@@ -94,8 +94,8 @@ radWin32Drive::radWin32Drive( const char* pdrivespec, radMemoryAllocator alloc )
     {
         strncpy( m_DriveName, pdrivespec, radFileDrivenameMax );
         m_DriveName[radFileDrivenameMax] = '\0';
-        m_DrivePath = strlwr( m_DriveName );
-        strupr( m_DriveName );
+        m_DrivePath = rad_strlwr( m_DriveName );
+        rad_strlwr( m_DriveName );
     }
     m_Capabilities = ( radDriveEnumerable | radDriveWriteable | radDriveDirectory | radDriveFile );
 }

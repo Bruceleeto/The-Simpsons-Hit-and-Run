@@ -92,8 +92,7 @@ void radSoundHalEffectEAX2Reverb::Update( void )
 void radSoundHalEffectEAX2Reverb::SetRoom( int mBValue )
 {
     float value = ::radSoundVolumeDbToHardwareWin(mBValue / 100.0f);
-    rAssert(value >= AL_REVERB_MIN_GAIN && value <= AL_REVERB_MAX_GAIN);
-    alEffectf(m_Effect, AL_REVERB_GAIN, value);
+     alEffectf(m_Effect, AL_REVERB_GAIN, value);
     OnParameterUpdated();
 }
 int   radSoundHalEffectEAX2Reverb::GetRoom( void )
@@ -105,8 +104,7 @@ int   radSoundHalEffectEAX2Reverb::GetRoom( void )
 void  radSoundHalEffectEAX2Reverb::SetRoomHF( int mBValue )
 {
     float value = ::radSoundVolumeDbToHardwareWin(mBValue / 100.0f);
-    rAssert(value >= AL_REVERB_MIN_GAINHF && value <= AL_REVERB_MAX_GAINHF);
-    alEffectf(m_Effect, AL_REVERB_GAINHF, value);
+     alEffectf(m_Effect, AL_REVERB_GAINHF, value);
     OnParameterUpdated();
 }
 int radSoundHalEffectEAX2Reverb::GetRoomHF( void )
@@ -117,8 +115,7 @@ int radSoundHalEffectEAX2Reverb::GetRoomHF( void )
 }
 void  radSoundHalEffectEAX2Reverb::SetRoomRolloffFactor( float value )
 {
-    rAssert(value >= AL_REVERB_MIN_ROOM_ROLLOFF_FACTOR && value <= AL_REVERB_MAX_ROOM_ROLLOFF_FACTOR);
-    alEffectf(m_Effect, AL_REVERB_ROOM_ROLLOFF_FACTOR, value);
+     alEffectf(m_Effect, AL_REVERB_ROOM_ROLLOFF_FACTOR, value);
     OnParameterUpdated();
 }
 float radSoundHalEffectEAX2Reverb::GetRoomRolloffFactor( void )
@@ -129,8 +126,7 @@ float radSoundHalEffectEAX2Reverb::GetRoomRolloffFactor( void )
 }
 void  radSoundHalEffectEAX2Reverb::SetDecayTime( float value )
 {
-    rAssert(value >= AL_REVERB_MIN_DECAY_TIME && value <= AL_REVERB_MAX_DECAY_TIME);
-    alEffectf(m_Effect, AL_REVERB_DECAY_TIME, value);
+     alEffectf(m_Effect, AL_REVERB_DECAY_TIME, value);
     OnParameterUpdated();
 }
 float radSoundHalEffectEAX2Reverb::GetDecayTime( void )
@@ -141,8 +137,7 @@ float radSoundHalEffectEAX2Reverb::GetDecayTime( void )
 }
 void  radSoundHalEffectEAX2Reverb::SetDecayHFRatio( float value )
 {
-    rAssert(value >= AL_REVERB_MIN_DECAY_HFRATIO && value <= AL_REVERB_MAX_DECAY_HFRATIO);
-    alEffectf(m_Effect, AL_REVERB_DECAY_HFRATIO, value);
+     alEffectf(m_Effect, AL_REVERB_DECAY_HFRATIO, value);
     OnParameterUpdated();
 }
 float radSoundHalEffectEAX2Reverb::GetDecayHFRatio( void )
@@ -154,8 +149,7 @@ float radSoundHalEffectEAX2Reverb::GetDecayHFRatio( void )
 void  radSoundHalEffectEAX2Reverb::SetReflections( int mBValue )
 {
     float value = ::radSoundVolumeDbToHardwareWin(mBValue / 100.0f);
-    rAssert(value >= AL_REVERB_MIN_REFLECTIONS_GAIN && value <= AL_REVERB_MAX_REFLECTIONS_GAIN);
-    alEffectf(m_Effect, AL_REVERB_REFLECTIONS_GAIN, value);
+     alEffectf(m_Effect, AL_REVERB_REFLECTIONS_GAIN, value);
     OnParameterUpdated();
 }
 int   radSoundHalEffectEAX2Reverb::GetReflections( void )
@@ -166,8 +160,7 @@ int   radSoundHalEffectEAX2Reverb::GetReflections( void )
 }
 void  radSoundHalEffectEAX2Reverb::SetReflectionsDelay( float value )
 {
-    rAssert(value >= AL_REVERB_MIN_REFLECTIONS_DELAY && value <= AL_REVERB_MAX_REFLECTIONS_DELAY);
-    alEffectf(m_Effect, AL_REVERB_REFLECTIONS_DELAY, value);
+     alEffectf(m_Effect, AL_REVERB_REFLECTIONS_DELAY, value);
     OnParameterUpdated();
 }
 float radSoundHalEffectEAX2Reverb::GetReflectionsDelay( void )
@@ -179,8 +172,7 @@ float radSoundHalEffectEAX2Reverb::GetReflectionsDelay( void )
 void  radSoundHalEffectEAX2Reverb::SetReverb( int mBValue )
 {
     float value = ::radSoundVolumeDbToHardwareWin(mBValue / 100.0f);
-    rAssert(value >= AL_REVERB_MIN_LATE_REVERB_GAIN && value <= AL_REVERB_MAX_LATE_REVERB_GAIN);
-    alEffectf(m_Effect, AL_REVERB_LATE_REVERB_GAIN, value);
+     alEffectf(m_Effect, AL_REVERB_LATE_REVERB_GAIN, value);
     OnParameterUpdated();
 }
 int   radSoundHalEffectEAX2Reverb::GetReverb( void )
@@ -191,8 +183,7 @@ int   radSoundHalEffectEAX2Reverb::GetReverb( void )
 }
 void  radSoundHalEffectEAX2Reverb::SetReverbDelay( float value )
 {
-    rAssert(value >= AL_REVERB_MIN_LATE_REVERB_DELAY && value <= AL_REVERB_MAX_LATE_REVERB_DELAY);
-    alEffectf(m_Effect, AL_REVERB_LATE_REVERB_DELAY, value);
+     alEffectf(m_Effect, AL_REVERB_LATE_REVERB_DELAY, value);
     OnParameterUpdated();
 }
 float radSoundHalEffectEAX2Reverb::GetReverbDelay( void )
@@ -211,8 +202,7 @@ float radSoundHalEffectEAX2Reverb::GetEnvironmentSize( void )
 }
 void  radSoundHalEffectEAX2Reverb::SetEnvironmentDiffusion( float value )
 {
-    rAssert(value >= AL_REVERB_MIN_DIFFUSION && value <= AL_REVERB_MAX_DIFFUSION);
-    alEffectf(m_Effect, AL_REVERB_DIFFUSION, value);
+     alEffectf(m_Effect, AL_REVERB_DIFFUSION, value);
     OnParameterUpdated();
 }
 float radSoundHalEffectEAX2Reverb::GetEnvironmentDiffusion( void )
@@ -224,8 +214,7 @@ float radSoundHalEffectEAX2Reverb::GetEnvironmentDiffusion( void )
 void  radSoundHalEffectEAX2Reverb::SetAirAbsorptionHF( float value )
 {
     value = powf(10.f, value / 2000.f);
-    rAssert(value >= AL_REVERB_MIN_AIR_ABSORPTION_GAINHF && value <= AL_REVERB_MAX_AIR_ABSORPTION_GAINHF);
-    alEffectf(m_Effect, AL_REVERB_AIR_ABSORPTION_GAINHF, value);
+     alEffectf(m_Effect, AL_REVERB_AIR_ABSORPTION_GAINHF, value);
     OnParameterUpdated();
 }
 float radSoundHalEffectEAX2Reverb::GetAirAbsorptionHF( void )

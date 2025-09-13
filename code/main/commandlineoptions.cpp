@@ -111,39 +111,39 @@ void CommandLineOptions::HandleOption( const char* const optionIn )
     strcpy( option, optionIn );
     rReleasePrintf( "Commandline Option: %s\n", option );
 
-    if( strcmp( strupr(option), "NOMUSIC" ) == 0 )
+    if( strcmp( rad_strupr(option), "NOMUSIC" ) == 0 )
     {
         orValue <<= CLO_NO_MUSIC;
     }
-    else if( strcmp( strupr(option), "NOEFFECTS" ) == 0 )
+    else if( strcmp( rad_strupr(option), "NOEFFECTS" ) == 0 )
     {
         orValue <<= CLO_NO_EFFECTS;
     }
-    else if( strcmp( strupr(option), "NODIALOG" ) == 0 )
+    else if( strcmp( rad_strupr(option), "NODIALOG" ) == 0 )
     {
         orValue <<= CLO_NO_DIALOG;
     }
-    else if( strcmp( strupr(option), "MUTE" ) == 0 )
+    else if( strcmp( rad_strupr(option), "MUTE" ) == 0 )
     {
         orValue <<= CLO_MUTE;
     }
-    else if( strcmp( strupr(option), "SKIPMOVIE" ) == 0 )
+    else if( strcmp( rad_strupr(option), "SKIPMOVIE" ) == 0 )
     {
         orValue <<= CLO_SKIP_MOVIE;
     }
-    else if( strcmp( strupr(option), "MEMMONITOR" ) == 0 )
+    else if( strcmp( rad_strupr(option), "MEMMONITOR" ) == 0 )
     {
         orValue <<= CLO_MEMORY_MONITOR;
     }
-    else if( strcmp( strupr(option), "HEAPSTATS" ) == 0 )
+    else if( strcmp( rad_strupr(option), "HEAPSTATS" ) == 0 )
     {
         orValue <<= CLO_HEAP_STATS;
     }
-    else if( strcmp( strupr(option), "CDFILES" ) == 0 )
+    else if( strcmp( rad_strupr(option), "CDFILES" ) == 0 )
     {
         orValue <<= CLO_CD_FILES_ONLY;
     }
-    else if( strcmp( strupr(option), "HOSTFILES" ) == 0 )
+    else if( strcmp( rad_strupr(option), "HOSTFILES" ) == 0 )
     {
         //
         // Careful to avoid the PS2-hated 64-bit constant
@@ -159,187 +159,187 @@ void CommandLineOptions::HandleOption( const char* const optionIn )
         //
         optionFound = false;
     }
-    else if( strcmp( strupr(option), "FIREWIRE" ) == 0 )
+    else if( strcmp( rad_strupr(option), "FIREWIRE" ) == 0 )
     {
         orValue <<= CLO_FIREWIRE;
     }
-    else if( strcmp( strupr(option), "SNPROFILER" ) == 0 )
+    else if( strcmp( rad_strupr(option), "SNPROFILER" ) == 0 )
     {
         orValue <<= CLO_SN_PROFILER;
     }
-    else if( strcmp( strupr(option), "ARTSTATS" ) == 0 )
+    else if( strcmp( rad_strupr(option), "ARTSTATS" ) == 0 )
     {
         orValue <<= CLO_ART_STATS;
     }
-    else if( strcmp( strupr(option), "PROPSTATS" ) == 0 )
+    else if( strcmp( rad_strupr(option), "PROPSTATS" ) == 0 )
     {
         orValue <<= CLO_PROP_STATS;
     }
-    else if( strcmp( strupr(option), "FEUNJOINED" ) == 0 )
+    else if( strcmp( rad_strupr(option), "FEUNJOINED" ) == 0 )
     {
         orValue <<= CLO_FE_UNJOINED;
     }
-    else if( strcmp( strupr(option), "SPEEDOMETER" ) == 0 )
+    else if( strcmp( rad_strupr(option), "SPEEDOMETER" ) == 0 )
     {
         orValue <<= CLO_SHOW_SPEED;
     }
-    else if( strcmp( strupr(option), "NOHUD" ) == 0 )
+    else if( strcmp( rad_strupr(option), "NOHUD" ) == 0 )
     {
         orValue <<= CLO_NO_HUD;
     }
-    else if( strcmp( strupr(option), "DEBUGBV" ) == 0 )
+    else if( strcmp( rad_strupr(option), "DEBUGBV" ) == 0 )
     {
         orValue <<= CLO_DEBUGBV;
     }
-    else if( strcmp( strupr(option), "NOTRAFFIC" ) == 0 )
+    else if( strcmp( rad_strupr(option), "NOTRAFFIC" ) == 0 )
     {
         orValue <<= CLO_NO_TRAFFIC;
     }
-    else if( strcmp( strupr(option), "SKIPSUNDAY" ) == 0 )
+    else if( strcmp( rad_strupr(option), "SKIPSUNDAY" ) == 0 )
     {
         orValue <<= CLO_SKIP_SUNDAY;
     }
-    else if( strcmp( strupr(option), "SKIPFE" ) == 0 )
+    else if( strcmp( rad_strupr(option), "SKIPFE" ) == 0 )
     {
         orValue <<= CLO_SKIP_FE;
     }
-    else if( strcmp( strupr(option), "FEGAGS" ) == 0 )
+    else if( strcmp( rad_strupr(option), "FEGAGS" ) == 0 )
     {
         orValue <<= CLO_FE_GAGS_TEST;
     }
-    else if( strcmp( strupr(option), "FPS" ) == 0 )
+    else if( strcmp( rad_strupr(option), "FPS" ) == 0 )
     {
         orValue <<= CLO_FPS;
     }
-    else if( strcmp( strupr(option), "DESIGNER" ) == 0 )
+    else if( strcmp( rad_strupr(option), "DESIGNER" ) == 0 )
     {
         orValue <<= CLO_DESIGNER;
     }
-    else if( strcmp( strupr(option), "DETECTLEAKS" ) == 0 )
+    else if( strcmp( rad_strupr(option), "DETECTLEAKS" ) == 0 )
     {
         orValue <<= CLO_DETECT_LEAKS;
     }
-    else if( strcmp( strupr(option), "NOHEAPS" ) == 0 )
+    else if( strcmp( rad_strupr(option), "NOHEAPS" ) == 0 )
     {
         orValue <<= CLO_NO_HEAPS;
     }
-    else if( strcmp( strupr(option), "PRINTMEMORY" ) == 0 )
+    else if( strcmp( rad_strupr(option), "PRINTMEMORY" ) == 0 )
     {
         orValue <<= CLO_PRINT_MEMORY;
     }
-    else if( strcmp( strupr(option), "DEMOTEST" ) == 0 )
+    else if( strcmp( rad_strupr(option), "DEMOTEST" ) == 0 )
     {
         orValue <<= CLO_DEMO_TEST;
     }
-    else if( strcmp( strupr(option), "NOSPLASH" ) == 0 )
+    else if( strcmp( rad_strupr(option), "NOSPLASH" ) == 0 )
     {
         orValue <<= CLO_NO_SPLASH;
     }
-    else if( strcmp( strupr(option), "LANGUAGE" ) == 0 )
+    else if( strcmp( rad_strupr(option), "LANGUAGE" ) == 0 )
     {
         orValue <<= CLO_LANG_PROMPT;
     }
-    else if( strcmp( strupr(option), "SKIPMEMCHECK" ) == 0 )
+    else if( strcmp( rad_strupr(option), "SKIPMEMCHECK" ) == 0 )
     {
         orValue <<= CLO_SKIP_MEMCHECK;
     }
-    else if( strcmp( strupr(option), "NOHAPTIC" ) == 0 )
+    else if( strcmp( rad_strupr(option), "NOHAPTIC" ) == 0 )
     {
         orValue <<= CLO_NO_HAPTIC;
     }
-    else if( strcmp( strupr(option), "RANDOMBUTTONS" ) == 0 )
+    else if( strcmp( rad_strupr(option), "RANDOMBUTTONS" ) == 0 )
     {
         orValue <<= CLO_RANDOM_BUTTONS;
     }
-    else if( strcmp( strupr(option), "SEQUENTIALDEMO" ) == 0 )
+    else if( strcmp( rad_strupr(option), "SEQUENTIALDEMO" ) == 0 )
     {
         orValue <<= CLO_SEQUENTIAL_DEMO;
     }
-    else if ( strcmp( strupr(option), "PCTEST" ) == 0 )
+    else if ( strcmp( rad_strupr(option), "PCTEST" ) == 0 )
     {
         orValue <<= CLO_PARKED_CAR_TEST;
     }
-    else if ( strcmp( strupr(option), "NOAVRIL" ) == 0 )
+    else if ( strcmp( rad_strupr(option), "NOAVRIL" ) == 0 )
     {
         orValue <<= CLO_NO_AVRIL;
     }
-    else if ( strcmp( strupr(option), "SHORTDEMO" ) == 0 )
+    else if ( strcmp( rad_strupr(option), "SHORTDEMO" ) == 0 )
     {
         orValue <<= CLO_SHORT_DEMO;
     }
-    else if( strcmp( strupr( option), "PRINTLOADTIME" ) == 0 )
+    else if( strcmp( rad_strupr( option), "PRINTLOADTIME" ) == 0 )
     {
         orValue <<= CLO_PRINT_LOAD_TIME;
     }
-    else if( strcmp( strupr( option), "PRINTFRAMERATE" ) == 0 )
+    else if( strcmp( rad_strupr( option), "PRINTFRAMERATE" ) == 0 )
     {
         orValue <<= CLO_PRINT_FRAMERATE;
     }
-    else if ( strcmp( strupr( option ), "SHOWDYNALOAD" ) == 0 )
+    else if ( strcmp( rad_strupr( option ), "SHOWDYNALOAD" ) == 0 )
     {
         orValue <<= CLO_SHOW_DYNA_ZONES;
     }
-    else if ( strcmp( strupr( option ), "NOPEDS" ) == 0 )
+    else if ( strcmp( rad_strupr( option ), "NOPEDS" ) == 0 )
     {
         orValue <<= CLO_NO_PEDS;
     }
-    else if ( strcmp( strupr( option ), "MANUALRESETDAMAGE" ) == 0 )
+    else if ( strcmp( rad_strupr( option ), "MANUALRESETDAMAGE" ) == 0 )
     {
         orValue <<= CLO_MANUAL_RESET_DAMAGE;
     }
-    else if ( strcmp( strupr( option ), "WINDOW" ) == 0 )
+    else if ( strcmp( rad_strupr( option ), "WINDOW" ) == 0 )
     {
         orValue <<= CLO_WINDOW_MODE;
     }
-    else if ( strcmp( strupr( option ), "NOTUTORIAL" ) == 0 )
+    else if ( strcmp( rad_strupr( option ), "NOTUTORIAL" ) == 0 )
     {
         orValue <<= CLO_NO_TUTORIAL;
     }
-    else if ( strcmp( strupr( option ), "COINS" ) == 0 )
+    else if ( strcmp( rad_strupr( option ), "COINS" ) == 0 )
     {
         orValue <<= CLO_COINS;
     }
-    else if ( strcmp( strupr( option ), "PROGSCAN" ) == 0 )
+    else if ( strcmp( rad_strupr( option ), "PROGSCAN" ) == 0 )
     {
         orValue <<= CLO_PROGRESSIVE_SCAN;
     }
-    else if ( strcmp( strupr( option ), "LARGEHEAPS" ) == 0 )
+    else if ( strcmp( rad_strupr( option ), "LARGEHEAPS" ) == 0 )
     {
         orValue <<= CLO_LARGEHEAPS;
     }
-    else if ( strcmp( strupr( option ), "MEMCARDCHEAT" ) == 0 )
+    else if ( strcmp( rad_strupr( option ), "MEMCARDCHEAT" ) == 0 )
     {
         orValue <<= CLO_MEMCARD_CHEAT;
     }
-    else if ( strcmp( strupr( option ), "TOOL" ) == 0 )
+    else if ( strcmp( rad_strupr( option ), "TOOL" ) == 0 )
     {
         orValue <<= CLO_PS2_TOOL;
     }
-    else if ( strcmp( strupr( option ), "FILENOTFOUND" ) == 0 )
+    else if ( strcmp( rad_strupr( option ), "FILENOTFOUND" ) == 0 )
     {
         orValue <<= CLO_FILE_NOT_FOUND;
     }
-    else if ( strcmp( strupr( option ), "NOLOADINGSPEW" ) == 0 )
+    else if ( strcmp( rad_strupr( option ), "NOLOADINGSPEW" ) == 0 )
     {
         orValue <<= CLO_NO_LOADING_SPEW;
     }    
-    else if ( strcmp( strupr( option ), "AUDIOSPEW" ) == 0 )
+    else if ( strcmp( rad_strupr( option ), "AUDIOSPEW" ) == 0 )
     {
         orValue <<= CLO_AUDIO_LOADING_SPEW;
     }    
-    else if ( strcmp( strupr( option ), "RELEASEPRINT" ) == 0 )
+    else if ( strcmp( rad_strupr( option ), "RELEASEPRINT" ) == 0 )
     {
         extern bool g_AllowDebugOutput;
         g_AllowDebugOutput = true;
         optionFound = false;     
     }
-    else if ( strcmp( strupr( option ), "NOFRUITLESS" ) == 0 )
+    else if ( strcmp( rad_strupr( option ), "NOFRUITLESS" ) == 0 )
     {
         extern bool gFruitless;
         gFruitless = false;
         optionFound = false;        
     }
-    else if ( strcmp( strupr( option ), "RADTUNER" ) == 0 )
+    else if ( strcmp( rad_strupr( option ), "RADTUNER" ) == 0 )
     {
         extern bool gTuneSound;
         gTuneSound = true;
@@ -355,11 +355,11 @@ void CommandLineOptions::HandleOption( const char* const optionIn )
         char lastChar = option[ stringLength - 1 ];
         option[ stringLength - 1 ] = '\0';
 
-        if( strcmp( strupr(option), "L" ) == 0 )
+        if( strcmp( rad_strupr(option), "L" ) == 0 )
         {
             s_defaultLevel = lastChar - '1';
         }
-        else if( strcmp( strupr(option), "M" ) == 0 )
+        else if( strcmp( rad_strupr(option), "M" ) == 0 )
         {
             s_defaultMission = lastChar - '1';
         }

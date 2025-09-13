@@ -4,7 +4,7 @@
 #include <cctype>
 
 // uppercase
-inline char* strupr(char* s)
+inline char* rad_strupr(char* s)
 {
     for (char* p = s; *p; ++p)
     {
@@ -14,7 +14,7 @@ inline char* strupr(char* s)
 }
 
 // lowercase
-inline char* strlwr(char* s)
+inline char* rad_strlwr(char* s)
 {
     for (char* p = s; *p; ++p)
     {
@@ -23,4 +23,4 @@ inline char* strlwr(char* s)
     return s;
 }
 
-#endif
+#endif // RAD_STRUTILS_HPP

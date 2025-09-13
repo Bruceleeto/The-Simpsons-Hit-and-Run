@@ -413,7 +413,7 @@ class radString
                 str++;
             }
             #else
-                strlwr( m_pBuffer );
+                rad_strlwr( m_pBuffer );
             #endif
         }
     }
@@ -433,7 +433,7 @@ class radString
                 str++;
             }
             #else
-                strupr( m_pBuffer );
+                rad_strlwr( m_pBuffer );
             #endif
         }
     }

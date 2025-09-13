@@ -10,8 +10,60 @@ if(CCACHE_FOUND)
     set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
 endif()
 
-find_package(SDL2 REQUIRED)
-find_package(PNG REQUIRED)
+if(CMAKE_SYSTEM_NAME STREQUAL "Dreamcast" OR DEFINED ENV{KOS_BASE})
+    set(SDL2_FOUND TRUE)
+    set(SDL2_INCLUDE_DIRS "$ENV{KOS_BASE}/addons/include/dreamcast/SDL2")
+    set(SDL2_LIBRARIES "-lSDL2 -lGL")
+    
+    add_library(SDL2::SDL2 INTERFACE IMPORTED)
+    set_target_properties(SDL2::SDL2 PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${SDL2_INCLUDE_DIRS}"
+        INTERFACE_LINK_LIBRARIES "${SDL2_LIBRARIES}"
+    )
+    add_library(SDL2::SDL2main INTERFACE IMPORTED)
+    
+    set(PNG_FOUND TRUE)
+    set(PNG_INCLUDE_DIRS "$ENV{KOS_BASE}/addons/include")
+    set(PNG_LIBRARIES "-lpng -lz")
+    
+    add_library(PNG::PNG INTERFACE IMPORTED)
+    set_target_properties(PNG::PNG PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${PNG_INCLUDE_DIRS}"
+        INTERFACE_LINK_LIBRARIES "${PNG_LIBRARIES}"
+    )
+    
+    set(OPENAL_FOUND TRUE)
+    set(OPENAL_INCLUDE_DIR "$ENV{KOS_PORTS}/include/AL")
+    set(OPENAL_LIBRARY "-lopenal")
+    
+    add_library(OpenAL::OpenAL INTERFACE IMPORTED)
+    set_target_properties(OpenAL::OpenAL PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${OPENAL_INCLUDE_DIR}"
+        INTERFACE_LINK_LIBRARIES "${OPENAL_LIBRARY}"
+    )
+    set(SRR2_OPENAL_TARGET OpenAL::OpenAL)
+    
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s")
+    
+else()
+    find_package(SDL2 REQUIRED)
+    find_package(PNG REQUIRED)
+    set(THREADS_PREFER_PTHREAD_FLAG ON)
+    find_package(Threads REQUIRED)
+    
+    set(SRR2_OPENAL_IMPL "OpenAL-Soft" CACHE STRING "OpenAL implementation")
+    set_property(CACHE SRR2_OPENAL_IMPL PROPERTY STRINGS "OpenAL-Soft" "MojoAL")
+    
+    if (SRR2_OPENAL_IMPL STREQUAL "OpenAL-Soft")
+        find_package(OpenAL REQUIRED)
+        set(SRR2_OPENAL_TARGET OpenAL::OpenAL)
+    else()
+        add_subdirectory(libs/sdks/mojoal SYSTEM)
+        set(SRR2_OPENAL_TARGET mojoal)
+    endif()
+endif()
+
+
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 

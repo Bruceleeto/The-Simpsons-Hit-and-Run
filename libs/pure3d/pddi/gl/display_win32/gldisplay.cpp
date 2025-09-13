@@ -105,7 +105,7 @@ MessageCallback(GLenum source,
     GLsizei length,
     const GLchar* message,
     const void* userParam)
-{/*  
+{  
     switch(severity)
     {
         case GL_DEBUG_SEVERITY_HIGH_KHR:
@@ -121,7 +121,7 @@ MessageCallback(GLenum source,
             SDL_LogVerbose(SDL_LOG_CATEGORY_APPLICATION, "%s", message);
             break;
     }
-*/
+
 }
 #endif
 
@@ -181,7 +181,7 @@ bool pglDisplay ::InitDisplay(const pddiDisplayInit* init)
     prevRC = SDL_GL_GetCurrentContext();
     hRC = SDL_GL_CreateContext(win);
     if (!hRC)
-     //   SDL_Log("SDL_GL_CreateContext() error: %s", SDL_GetError());
+        SDL_Log("SDL_GL_CreateContext() error: %s", SDL_GetError());
     PDDIASSERT(hRC);
 
 #ifdef RAD_GLES
@@ -212,12 +212,12 @@ bool pglDisplay ::InitDisplay(const pddiDisplayInit* init)
             if(*walk == ' ')
             {
                 *walk = 0;
-             //   SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "%s", last);
+                SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "%s", last);
                 last = walk+1;
             }
             walk++;
         }
-     //   SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "%s", last);
+       SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "%s", last);
     }
 
     extBGRA = CheckExtension("GL_EXT_bgra") || CheckExtension("GL_EXT_texture_format_BGRA8888");
@@ -225,7 +225,7 @@ bool pglDisplay ::InitDisplay(const pddiDisplayInit* init)
     extBlend = CheckExtension("GL_OES_blend_equation_separate");
 #endif
 
-//    SDL_Log("OpenGL - Vendor: %s, Renderer: %s, Version: %s",glVendor,glRenderer,glVersion);
+    SDL_Log("OpenGL - Vendor: %s, Renderer: %s, Version: %s",glVendor,glRenderer,glVersion);
 
 #if defined RAD_DEBUG && !defined RAD_VITA
     glEnable(GL_DEBUG_OUTPUT_KHR);

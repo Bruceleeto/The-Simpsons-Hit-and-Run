@@ -1068,7 +1068,7 @@ CGuiScreenPhoneBooth::HandleMessageForCar( eGuiMessage message,
                     {
                         char textBibleEntry[ 16 ];
                         strcpy( textBibleEntry, OVERRIDE_VEHICLE_NAMES[ s_currentDebugVehicleSelection ] );
-                        UnicodeChar* textBibleString = GetTextBibleString( strupr( textBibleEntry ) );
+                        UnicodeChar* textBibleString = GetTextBibleString( rad_strupr( textBibleEntry ) );
                         UnicodeString unicodeString;
                         if( textBibleString != NULL )
                         {

@@ -32,13 +32,7 @@
 
 #include <vector>
 
-extern "C"
-{
-    #include <libavcodec/avcodec.h>
-    #include <libavformat/avformat.h>
-    #include <libswscale/swscale.h>
-    #include <libswresample/swresample.h>
-}
+ 
 
 typedef int ALint;
 typedef unsigned int ALuint;
@@ -290,22 +284,17 @@ IRadMoviePlayer2::State radMoviePlayer::GetState( void )
 // radMoviePlayer::GetVideoFrameInfo
 //=============================================================================
 
-bool radMoviePlayer::GetVideoFrameInfo( VideoFrameInfo * frameInfo)
+bool radMoviePlayer::GetVideoFrameInfo(VideoFrameInfo* frameInfo)
 {
-    rAssert( frameInfo != NULL );
-
-    if( m_State == IRadMoviePlayer2::Playing ||
-        m_State == IRadMoviePlayer2::ReadyToPlay )
+    // stubbed out: no video info available
+    if (frameInfo)
     {
-        ( * frameInfo ).Width = m_pVideoFrame->width;
-        ( * frameInfo ).Height = m_pVideoFrame->height;
-        return true;
+        frameInfo->Width = 0;
+        frameInfo->Height = 0;
     }
-    else
-    {
-        return false;
-    }
+    return false;
 }
+
 
 //=============================================================================
 // radMoviePlayer::GetFrameRate

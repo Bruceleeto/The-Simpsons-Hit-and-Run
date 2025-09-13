@@ -640,7 +640,7 @@ CGuiScreenVehicleGallery::OnMenuSelectionMade( int selection )
         strcpy( stringID, m_rewardSelections[ m_pMenu->GetSelection() ]->GetName() );
 
         UnicodeString unicodeString;
-        unicodeString.ReadUnicode( GetTextBibleString( strupr( stringID ) ) );
+        unicodeString.ReadUnicode( GetTextBibleString( rad_strupr( stringID ) ) );
 
         rAssert( m_vehicleName != NULL );
         m_vehicleName->SetString( 0, unicodeString );

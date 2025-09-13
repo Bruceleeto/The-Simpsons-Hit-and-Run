@@ -643,7 +643,7 @@ CGuiScreenSkinGallery::OnMenuSelectionMade( int selection )
         strcpy( stringID, m_rewardSelections[ m_pMenu->GetSelection() ]->GetName() );
 
         UnicodeString unicodeString;
-        unicodeString.ReadUnicode( GetTextBibleString( strupr( stringID ) ) );
+        unicodeString.ReadUnicode( GetTextBibleString( rad_strupr( stringID ) ) );
 
         rAssert( m_skinName != NULL );
         m_skinName->SetString( 0, unicodeString );
