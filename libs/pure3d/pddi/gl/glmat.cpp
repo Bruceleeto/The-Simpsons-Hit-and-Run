@@ -94,16 +94,16 @@ GLenum alphaCompareTable[8] =
     GL_NOTEQUAL
 };
 
-GLenum alphaBlendTable[8][3] =
+GLenum alphaBlendTable[8][2] =
 {
-    { GL_FUNC_ADD, GL_ONE, GL_ZERO },                       //PDDI_BLEND_NONE,
-    { GL_FUNC_ADD, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA },  //PDDI_BLEND_ALPHA
-    { GL_FUNC_ADD, GL_ONE, GL_ONE },                        //PDDI_BLEND_ADD
-    { GL_FUNC_REVERSE_SUBTRACT, GL_ONE, GL_ONE },           //PDDI_BLEND_SUBTRACT
-    { GL_FUNC_ADD, GL_DST_COLOR, GL_ZERO },                 //PDDI_BLEND_MODULATE,
-    { GL_FUNC_ADD, GL_DST_COLOR, GL_SRC_COLOR},             //PDDI_BLEND_MODULATE2,
-    { GL_FUNC_ADD, GL_ONE, GL_SRC_ALPHA},                   //PDDI_BLEND_ADDMODULATEALPHA,
-    { GL_FUNC_REVERSE_SUBTRACT, GL_SRC_ALPHA, GL_SRC_ALPHA} //PDDI_BLEND_SUBMODULATEALPHA
+    { GL_ONE, GL_ZERO },                       //PDDI_BLEND_NONE,
+    { GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA },  //PDDI_BLEND_ALPHA
+    { GL_ONE, GL_ONE },                        //PDDI_BLEND_ADD
+    { GL_ONE, GL_ONE },                        //PDDI_BLEND_SUBTRACT  
+    { GL_DST_COLOR, GL_ZERO },                 //PDDI_BLEND_MODULATE,
+    { GL_DST_COLOR, GL_SRC_COLOR},             //PDDI_BLEND_MODULATE2,
+    { GL_ONE, GL_SRC_ALPHA},                   //PDDI_BLEND_ADDMODULATEALPHA,
+    { GL_SRC_ALPHA, GL_SRC_ALPHA}              //PDDI_BLEND_SUBMODULATEALPHA (approximation)
 };
 
 static inline void FillGLColour(pddiColour c, float* f)
@@ -311,22 +311,17 @@ void pglMat::SetDevPass(unsigned pass)
         glDisable(GL_ALPHA_TEST);
     }
 
-    if(texEnv[i].alphaBlendMode == PDDI_BLEND_NONE)
-    {
-        glDisable(GL_BLEND);
-    }
-    else
-    {
-        glEnable(GL_BLEND);
-#ifdef RAD_GLES
-        if(context->GetDisplay()->ExtBlend())
-            glBlendEquationSeparateOES(alphaBlendTable[texEnv[i].alphaBlendMode][0],alphaBlendTable[texEnv[i].alphaBlendMode][0]);
-#else
-        glBlendEquation(alphaBlendTable[texEnv[i].alphaBlendMode][0]);
-#endif
-        glBlendFunc(alphaBlendTable[texEnv[i].alphaBlendMode][1],alphaBlendTable[texEnv[i].alphaBlendMode][2]);
-    }
- 
+if(texEnv[i].alphaBlendMode == PDDI_BLEND_NONE)
+{
+    glDisable(GL_BLEND);
+}
+else
+{
+    glEnable(GL_BLEND);
+    glBlendFunc(alphaBlendTable[texEnv[i].alphaBlendMode][0], 
+                alphaBlendTable[texEnv[i].alphaBlendMode][1]);
+}
+
     if(texEnv[i].lit)
     {
         float c[4];
@@ -363,6 +358,3 @@ void pglMat::SetDevPass(unsigned pass)
         glEnable(GL_CULL_FACE);
     }
 }
-
-
-

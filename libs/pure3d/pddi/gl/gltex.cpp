@@ -18,8 +18,7 @@ static inline GLenum PickPixelFormat(pddiPixelFormat format)
     switch (format)
     {
 #if defined RAD_VITA || defined RAD_GLES
-    case PDDI_PIXEL_RGB888: return GL_BGRA_EXT;
-    case PDDI_PIXEL_ARGB8888: return GL_BGRA_EXT;
+ 
 #else
     case PDDI_PIXEL_RGB555:
     case PDDI_PIXEL_RGB565: return GL_RGB5;
@@ -200,7 +199,7 @@ void pglTexture::SetGLState(void)
 
 #if !defined RAD_GLES && !defined RAD_VITAGL
     float fpriority = float(priority) / 31.0f;
-    glPrioritizeTextures(1, &gltexture, &fpriority);
+   // glPrioritizeTextures(1, &gltexture, &fpriority);
 #endif
 }
 
