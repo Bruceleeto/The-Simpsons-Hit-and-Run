@@ -27,9 +27,7 @@ static inline GLenum PickPixelFormat(pddiPixelFormat format)
     case PDDI_PIXEL_ARGB4444: return GL_RGBA4;
     case PDDI_PIXEL_RGB888: return GL_RGB8;
     case PDDI_PIXEL_ARGB8888: return GL_RGBA8;
-    case PDDI_PIXEL_PAL8: return GL_COLOR_INDEX8_EXT;
-    case PDDI_PIXEL_PAL4: return GL_COLOR_INDEX4_EXT;
-    case PDDI_PIXEL_LUM8: return GL_LUMINANCE8;
+     case PDDI_PIXEL_LUM8: return GL_LUMINANCE8;
     case PDDI_PIXEL_DUDV88: return GL_LUMINANCE8_ALPHA8;
 #endif
 #if defined(RAD_GLES)
@@ -37,10 +35,7 @@ static inline GLenum PickPixelFormat(pddiPixelFormat format)
     case PDDI_PIXEL_DXT3: return GL_RGBA;
     case PDDI_PIXEL_DXT5: return GL_RGBA;
 #else
-    case PDDI_PIXEL_DXT1: return GL_COMPRESSED_RGB_S3TC_DXT1_EXT;
-    case PDDI_PIXEL_DXT3: return GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
-    case PDDI_PIXEL_DXT5: return GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
-#endif
+ #endif
     }
     PDDIASSERT(false);
     return GL_INVALID_ENUM;

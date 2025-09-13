@@ -117,14 +117,7 @@ void pglContext::BeginFrame()
         glCullFace(GL_FRONT);
         glColor4f(1,1,1,1);
 
-#if !defined RAD_GLES && !defined RAD_VITAGL
-        glEnable(GL_DITHER);
 
-        if(display->CheckExtension("GL_EXT_separate_specular_color"))
-        {
-            glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL_EXT, GL_SEPARATE_SPECULAR_COLOR_EXT);
-        }
-#endif
 
         SyncState(0xffffffff);
     }
