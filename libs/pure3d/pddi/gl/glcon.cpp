@@ -719,8 +719,8 @@ int pglContext::GetMaxLights(void)
 
 void pglContext::SetupHardwareLight(int handle)
 {
-    GLenum h = GLenum(GL_LIGHT0 + handle);
-    
+    GLenum h = static_cast<GLenum>(GL_LIGHT0 + handle);
+
     if(state.lightingState->light[handle].enabled)
         glEnable(h);
     else

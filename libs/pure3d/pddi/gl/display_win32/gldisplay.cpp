@@ -96,34 +96,59 @@ bool pglDisplay ::InitDisplay(int x, int y, int bpp)
     return InitDisplay(&displayInit);
 }
 
-#ifdef RAD_DEBUG
-void GLAPIENTRY
-MessageCallback(GLenum source,
-    GLenum type,
-    GLuint id,
-    GLenum severity,
-    GLsizei length,
-    const GLchar* message,
-    const void* userParam)
-{  
-    switch(severity)
-    {
-        case GL_DEBUG_SEVERITY_HIGH_KHR:
-            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "%s", message);
-            break;
-        case GL_DEBUG_SEVERITY_MEDIUM_KHR:
-            SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "%s", message);
-            break;
-        case GL_DEBUG_SEVERITY_LOW_KHR:
-            SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "%s", message);
-            break;
-        case GL_DEBUG_SEVERITY_NOTIFICATION_KHR:
-            SDL_LogVerbose(SDL_LOG_CATEGORY_APPLICATION, "%s", message);
-            break;
-    }
+ 
+#ifdef __DREAMCAST__ 
 
+bool pglDisplay::InitDisplay(const pddiDisplayInit* init)
+{
+    displayInit = *init;
+
+    int x = init->xsize;
+    int y = init->ysize;
+    int bpp = init->bpp;
+    pddiDisplayMode m = init->displayMode;
+    int colourBufferCount = 1;
+    unsigned bufMask = init->bufferMask;
+    unsigned nSamples = 0;
+
+    reset = true;
+    mode = m;
+    
+    SDL_DisplayMode displayMode = {}, closestMode = {};
+    displayMode.w = x;
+    displayMode.h = y;
+    SDL_DisplayMode* pDisplayMode = SDL_GetClosestDisplayMode(displayInfo->id, &displayMode, &closestMode);
+    if (pDisplayMode)
+        SDL_SetWindowDisplayMode(win, pDisplayMode);
+
+    SDL_GL_GetDrawableSize(win, &winWidth, &winHeight);
+    winBitDepth = bpp;
+
+    if (hRC)
+        return true;
+
+    // Initialize GLdc for Dreamcast
+    glKosInit();
+    
+    // Create a dummy context handle since GLdc doesn't use SDL's GL context
+    hRC = (SDL_GLContext)1;  // Just needs to be non-null
+    
+    // Skip GLAD loader - GLdc provides OpenGL functions directly
+    // gladLoadGLLoader() not needed for Dreamcast/GLdc
+    
+    char* glVendor = (char*)glGetString(GL_VENDOR);
+    char* glRenderer = (char*)glGetString(GL_RENDERER);
+    char* glVersion = (char*)glGetString(GL_VERSION);
+    char* glExtensions = (char*)glGetString(GL_EXTENSIONS);
+
+    extBGRA = false;  // GLdc doesn't support BGRA
+    
+    SDL_Log("OpenGL - Vendor: %s, Renderer: %s, Version: %s", glVendor, glRenderer, glVersion);
+
+    return true;
 }
-#endif
+
+#else 
 
 bool pglDisplay ::InitDisplay(const pddiDisplayInit* init)
 {
@@ -228,14 +253,15 @@ bool pglDisplay ::InitDisplay(const pddiDisplayInit* init)
     SDL_Log("OpenGL - Vendor: %s, Renderer: %s, Version: %s",glVendor,glRenderer,glVersion);
 
 #if defined RAD_DEBUG && !defined RAD_VITA
-    glEnable(GL_DEBUG_OUTPUT_KHR);
-    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_KHR);
-    glDebugMessageCallback(MessageCallback, NULL);
+   // glEnable(GL_DEBUG_OUTPUT_KHR);
+   // glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_KHR);
+  //  glDebugMessageCallback(MessageCallback, NULL);
 #endif
 
     return true;
 }
 
+#endif 
 pddiDisplayInfo* pglDisplay ::GetDisplayInfo(void)
 {
     return displayInfo;

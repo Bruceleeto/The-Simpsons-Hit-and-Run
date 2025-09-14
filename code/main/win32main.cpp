@@ -150,6 +150,7 @@ extern "C" int main( int argc, char *argv[] )
     //
     // Initialize the game.
     //
+    
     pGame->Initialize();
 
     HeapMgr()->PopHeap (GMA_PERSISTENT);

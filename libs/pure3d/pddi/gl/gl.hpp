@@ -5,12 +5,17 @@
 
 // stub OpenGL header, all pddi gl code uses this instead of '#include <GL/gl.h>
 
-#ifdef RAD_VITAGL
-#include <vitaGL.h>
-#define GL_BGRA_EXT GL_BGRA
+#ifdef __DREAMCAST__
+#include "dc/gl.h"
+#include "dc/glu.h"
+#include "dc/glext.h"
+#include "dc/glkos.h"  
 #else
 #include <glad/glad.h>
 #endif
+
+ 
+
 
 #ifdef RAD_GLES
 #undef glOrtho
